@@ -1,5 +1,5 @@
 'use strict'
-module.exports.CheckBasicAllowed = async(msg, usr = null)=>{
+module.exports.CheckBasicAllowed = async(msg, msgOpts, usr = null)=>{
   try{
     if(+process.env.PRIVATE_BOT > 0) return 1;
     //if(usr.id == process.env.BOT_OWNER_ID) auth++;
@@ -11,12 +11,12 @@ module.exports.CheckBasicAllowed = async(msg, usr = null)=>{
     console.error(e);
   }
 }
-module.exports.CheckPrivateAllowed = async(msg)=>{
+module.exports.CheckPrivateAllowed = async(msg, msgOpts)=>{
   try{
     let auth = 0
     if(+process.env.PRIVATE_BOT > 0) auth++;
-    if(usr.id == process.env.BOT_OWNER_ID) auth++;
-    if(usr.id == process.env.BOT_STALKER_ID) auth++;
+    if(msg.author.id == process.env.BOT_OWNER_ID) auth++;
+    if(msg.author.id == process.env.BOT_STALKER_ID) auth++;
     if(auth) return auth;
     if(basicCmdAllowedServers.filter(x=>x == msg.message.guild.id).length > 0) auth++;
     if(privateCr.filter(x=>x == msg.author.id).length > 0) auth++;

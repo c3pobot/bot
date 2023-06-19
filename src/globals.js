@@ -15,6 +15,7 @@ global.mongoReady = 0
 global.debugMsg = +process.env.DEBUG || 0
 global.botSettings = {}
 global.msgOpts = { private: [], basic: [], member: [], message: [], vip: [] }
+global.Que = require('src/cmdQue')
 global.socketInfo = {
   service: 'bot',
   type: 'server',
