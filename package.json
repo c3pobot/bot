@@ -12,6 +12,7 @@
     "discord.js": "^14.11.0",
     "mongowrapper": "github:c3pobot/mongowrapper",
     "quewrapper": "github:c3pobot/quewrapper",
-    "rediswrapper": "github:c3pobot/rediswrapper"
+    "rediswrapper": "github:c3pobot/rediswrapper",
+    "socketclient": "github:c3pobot/socketclient"
   }
 }
