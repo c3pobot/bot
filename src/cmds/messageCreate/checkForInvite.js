@@ -7,6 +7,6 @@ const inviteEmbed = {
   }
 }
 module.exports = (msg)=>{
-  const args = msg.content.trim().split(/ +/g);
+  const args = msg?.content?.trim().split(/ +/g);
   if(args.filter(x=>x.toLowerCase() == 'invite').length > 0) msg.channel.send({embeds: [inviteEmbed]})
 }

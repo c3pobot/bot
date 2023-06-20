@@ -2,6 +2,12 @@
 const GetMsgOpts = require('./getMsgOpts')
 const CheckForInvite = require('./checkForInvite')
 const Cmds = {}
+Cmds.addMember = require('./addMember')
+Cmds.messageCreate = require('./messageCreate')
+Cmds.messageDelete = require('./messageDelete')
+
+Cmds.messageUpdate = require('./messageUpdate')
+Cmds.removeMember = require('./removeMember')
 let msgOpts = {}
 const SyncMsgOpts = async()=>{
   try{
@@ -16,9 +22,7 @@ const SyncMsgOpts = async()=>{
 SyncMsgOpts()
 module.exports = async(obj, cmdType = 'reaction')=>{
   try{
-    if(cmdType === 'translate' && objj?.reaction && obj?.usr) Cmds.translate(obj?.reaction, obj?.usr, msgOpts)
-    if(cmdType === 'editMsg' && objj?.newMsg && obj?.oldMsg) Cmds.editMsg(obj?.newMsg, obj?.oldMsg, msgOpts)
-    if(!obj?.guild || obj?.author?.bot || botReady === 0 || botReady === 0 || cmdType === 'translate' || cmdType === 'editMsg') return;
+    if(botReady === 0 || mongoReady === 0) return;
     if(Cmds[cmdType]) Cmds[cmdType](obj, msgOpts)
   }catch(e){
     console.error(e);
