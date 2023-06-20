@@ -7,10 +7,10 @@ const CustomReaction = require('./customReaction')
 module.exports = async(msg, msgOpts)=>{
   try{
     if(!msg?.guild || msg?.author?.bot) return;
+    CustomReaction(msg, msgOpts)
     let auth = await CheckBasicAllowed(msg, msgOpts)
     if(!auth) return;
     if(msg.guild.id === HELP_SERVER) CheckForInvite(msg)
-    CustomReaction(msg, msgOpts)
   }catch(e){
     console.error(e);
   }

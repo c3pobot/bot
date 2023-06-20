@@ -15,8 +15,6 @@ const updateServers = async()=>{
   try{
     const res = {member: [], message: [], private: [], basic: []}
     const servers = await mongo.find('discordServer', {}, {instance: 1, _id: 1, basicStatus: 1, msgEdit: 1, msgDelete: 1, newMember: 1, memberLeave: 1, welcome: 1, welcomeAlt: 1})
-    const guilds = (await mongo.find('botSettings', {_id: "2"}))[0]
-    if(guilds?.privateServers) res.private = guilds?.privateServers
     if(servers?.length > 0){
       res.basic = servers.filter(x=>x.basicStatus > 0).map(x=>x._id)
       res.member = servers.filter(x=>x.newMember || x.memberLeave || x.welcome || x.welcomeAlt).map(x=>{
@@ -25,6 +23,7 @@ const updateServers = async()=>{
       res.message = servers.filter(x=>x.msgEdit || x.msgDelete).map(x=>{
         return Object.assign({}, {sId: x._id, msgEdit: x.msgEdit, msgDelete: x.msgDelete})
       })
+      res.private = servers.filter(x=>x.instance === 'private').map(x=>x._id)
     }
     return res;
   }catch(e){

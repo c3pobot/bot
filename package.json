@@ -9,10 +9,11 @@
   "author": "scuba75",
   "license": "ISC",
   "dependencies": {
+    "botsocketclient": "github:c3pobot/botsocketclient",
     "discord.js": "^14.11.0",
     "mongowrapper": "github:c3pobot/mongowrapper",
     "quewrapper": "github:c3pobot/quewrapper",
     "rediswrapper": "github:c3pobot/rediswrapper",
-    "socketclient": "github:c3pobot/socketclient"
+    "socket.io": "^4.6.2"
   }
 }

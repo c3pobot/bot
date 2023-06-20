@@ -7,17 +7,8 @@ global.mongo = new MongoWrapper({
   repSet: process.env.MONGO_REPSET
 })
 
-global.basicCmdAllowedServers = []
-global.privateServers = []
-
 global.botReady = 0
 global.mongoReady = 0
 global.debugMsg = +process.env.DEBUG || 0
 global.botSettings = {}
-global.msgOpts = { private: [], basic: [], member: [], message: [], vip: [] }
-global.Que = require('src/cmdQue')
-global.socketInfo = {
-  service: 'bot',
-  type: 'server',
-  id: +process.env.SHARD_NUM
-}
+global.Que = require('./cmdQue')
