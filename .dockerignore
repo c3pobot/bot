@@ -1,6 +1,10 @@
 .git
 .gitignore
 .env
+.testregistry
+buildprodimage.sh
+buildtestimage.sh
+updategitdependency.sh
 Dockerfile
 node_modules
 data

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh",
-    "build": "chmod a+x buildtestimage.sh && ./buildtestimage.sh c3po-bot/bot:test"
+    "build": "chmod a+x buildtestimage.sh && ./buildtestimage.sh c3pobot/bot",
+    "prod": "chmod a+x buildprodimage.sh && ./buildprodimage.sh c3pobot/bot"
   },
   "author": "scuba75",
   "license": "ISC",
