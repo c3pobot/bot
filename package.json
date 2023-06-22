@@ -4,7 +4,8 @@
   "description": "c3po bot client",
   "main": "index.js",
   "scripts": {
-    "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh"
+    "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh",
+    "build": "chmod a+x buildtestimage.sh && ./buildtestimage.sh c3po-bot/bot:test"
   },
   "author": "scuba75",
   "license": "ISC",
