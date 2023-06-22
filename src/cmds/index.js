@@ -1,6 +1,5 @@
 'use strict'
 const GetMsgOpts = require('./getMsgOpts')
-const CheckForInvite = require('./checkForInvite')
 const Cmds = {}
 Cmds.addMember = require('./addMember')
 Cmds.messageCreate = require('./messageCreate')

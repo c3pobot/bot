@@ -1,4 +1,5 @@
 'use strict'
+
 const MongoWrapper = require('mongowrapper')
 global.mongo = new MongoWrapper({
   url: 'mongodb://'+process.env.MONGO_USER+':'+process.env.MONGO_PASS+'@'+process.env.MONGO_HOST+'/',

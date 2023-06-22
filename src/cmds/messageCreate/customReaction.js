@@ -47,7 +47,7 @@ const getResponse = (array, phrase, anywhere)=>{
 const CheckReaction = async(msg, msgOpts)=>{
   try{
     let acrResponse, args = [], vipAcr = [], gAcr = [], localAcr = [], content = []
-    if(obj.content) content = obj.content.toString().trim().toLowerCase().split(' ')
+    if(msg.content) content = msg.content.toString().trim().toLowerCase().split(' ')
     if(!(content?.length > 0)) return
     if(msgOpts?.private?.filter(x=>x === msg?.guild?.id).length > 0){
       gAcr = await getReactions('global')

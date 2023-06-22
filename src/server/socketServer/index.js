@@ -4,6 +4,7 @@ const { Server } = require('socket.io')
 const Cmds = require('./cmds')
 const PORT = process.env.HEALTH_PORT || 3001
 const SHARD_NUM = +process.env.SHARD_NUM
+const NUM_SHARDS = +process.env.NUM_SHARDS
 BotSocket.CreateSockets({cmds: Cmds, debugMsg: debugMsg})
 const GetShardId = async(sId, shardID)=>{
   try{
@@ -20,9 +21,9 @@ const ProcessCmd = async(cmd, obj, content)=>{
     let res
     let shard = await GetShardId(obj.sId, obj.shard)
     if(shard >= 0 && Cmds[cmd]){
-      obj.shard = shard
+      if(!obj.shard) obj.shard = shard
       if(shard === SHARD_NUM){
-        res = await Cmds[cmd](obj, conent)
+        res = await Cmds[cmd](obj, content)
       }else{
         res = await BotSocket.send(cmd, obj, content)
       }
@@ -35,13 +36,12 @@ const ProcessCmd = async(cmd, obj, content)=>{
 module.exports = (server)=>{
   try{
     const io = new Server(server, {maxHttpBufferSize: 1e8})
-    console.log('bot-'+SHARD_NUM+' bot socket server is running on port '+PORT)
+    console.log('bot-'+SHARD_NUM+' socket server is running on port '+PORT)
     io.on('connection', (socket) =>{
       socket.on('disconnect', (reason)=>{
         if(debugMsg) console.log(socket.id+' disconnected because of '+reason)
       })
       socket.on('message', (content, callback)=>{
-        console.log(content)
         if(callback) callback({status: 'ok'})
       })
       socket.on('request', async(cmd, obj, content, callback)=>{
@@ -50,7 +50,7 @@ module.exports = (server)=>{
           if(botReady) res = await ProcessCmd(cmd, obj, content)
           if(callback) callback(res)
         }catch(e){
-          console.log(e)
+          console.error(e)
           if(callback) callback({status: 'error'})
         }
       })

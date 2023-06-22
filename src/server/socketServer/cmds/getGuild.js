@@ -3,7 +3,7 @@ const queryGuild = require('./queryGuild')
 module.exports = async(obj = {}, content)=>{
   try{
     if(!obj.sId) return;
-    let guild = await queryGuild(obj.sId)
+    let guild = await queryGuild(obj)
     if(!guild) return
     const res = JSON.parse(JSON.stringify(guild))
     res.gRoles = guild.roles?.cache?.map(r=>{

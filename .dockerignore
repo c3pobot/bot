@@ -1,0 +1,8 @@
+.git
+.gitignore
+.env
+Dockerfile
+node_modules
+data
+cache
+docker-compose.yaml

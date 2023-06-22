@@ -22,7 +22,7 @@ global.bot = new Client({
     GatewayIntentBits.MessageContent
   ]
 });
-
+global.debugMsg = +process.env.DEBUG || 0
 const CheckBotReady = async()=>{
   if(botReady > 0){
     console.log('Bot on shard '+SHARD_NUM+' is ready')

@@ -6,7 +6,6 @@ const http = require('http')
 const PORT = process.env.HEALTH_PORT || 3001
 const SHARD_NUM = +process.env.SHARD_NUM
 const app = express()
-const Msg = require('./msg')
 app.use(bodyParser.json({
   limit: '500MB',
   verify: (req, res, buf)=>{
