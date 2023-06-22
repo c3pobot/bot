@@ -4,7 +4,7 @@
   "description": "c3po bot client",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh"
   },
   "author": "scuba75",
   "license": "ISC",
@@ -16,7 +16,6 @@
     "express": "^4.18.2",
     "mongowrapper": "github:c3pobot/mongowrapper",
     "quewrapper": "github:c3pobot/quewrapper",
-    "rediswrapper": "github:c3pobot/rediswrapper",
     "socket.io": "^4.6.2"
   }
 }
