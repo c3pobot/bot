@@ -6,9 +6,11 @@ const PORT = process.env.HEALTH_PORT || 3001
 const SHARD_NUM = +process.env.SHARD_NUM
 const NUM_SHARDS = +process.env.NUM_SHARDS
 BotSocket.CreateSockets({cmds: Cmds, debugMsg: debugMsg})
-const GetShardId = async(sId, shardID)=>{
+const anyShard = ['getAllServerStats']
+const GetShardId = async(sId, shardID, cmd)=>{
   try{
     if(+shardID >= 0) return +shardID
+    if(anyShard.filter(x=>x === cmd).length > 0) return +SHARD_NUM
     if(!sId) return
     let shardId = (Number(BigInt(sId) >> 22n) % (+NUM_SHARDS))
     if(+shardId >= 0) return +shardId
@@ -16,10 +18,10 @@ const GetShardId = async(sId, shardID)=>{
     console.error(e);
   }
 }
-const ProcessCmd = async(cmd, obj, content)=>{
+const ProcessCmd = async(cmd, obj = {}, content)=>{
   try{
     let res
-    let shard = await GetShardId(obj.sId, obj.shard)
+    let shard = await GetShardId(obj.sId, obj.shard, cmd)
     if(shard >= 0 && Cmds[cmd]){
       if(!obj.shard) obj.shard = shard
       if(shard === SHARD_NUM){
@@ -47,7 +49,7 @@ module.exports = (server)=>{
       socket.on('request', async(cmd, obj, content, callback)=>{
         try{
           let res
-          if(botReady) res = await ProcessCmd(cmd, obj, content)
+          if(botReady && cmd) res = await ProcessCmd(cmd, obj, content)
           if(callback) callback(res)
         }catch(e){
           console.error(e)

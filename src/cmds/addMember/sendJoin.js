@@ -1,4 +1,13 @@
 'use strict'
+const getDiscriminator = (num = '0')=>{
+  try{
+    let res = ''
+    if(num !== '0') res = '#+num'
+    return res
+  }catch(e){
+    console.error(e);
+  }
+}
 module.exports = async(member, chId)=>{
   try{
     const channel = await bot.channels.fetch(chId)
@@ -11,7 +20,7 @@ module.exports = async(member, chId)=>{
       },
       fields: [],
       timestamp: new Date(),
-      description: (member.user.id ? '<@'+member.user.id+'>':'@'+member.user.username)+' '+member.user.tag,
+      description: '<@'+member.user.id+'> '+member.user.username+''+(getDiscriminator(member.user?.discriminator)),
       footer: {
         text: 'ID: '+member.user.id
       }
