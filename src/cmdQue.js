@@ -22,7 +22,6 @@ const CreateQue = async(obj)=>{
 		if(CmdQues[obj.name]){
 			console.log('Creating '+obj.name+' job que...')
 			const opts = {queName: obj.queName, queOptions: {redis: redisConnection}}
-			if(process.env.SHARD_NUM?.toString().endsWith(0)) opts.createListeners = 1
 			CmdQues[obj.name].que = new QueWrapper(opts)
 		}
 	}catch(e){
