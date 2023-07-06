@@ -12,12 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "botsocketclient": "github:c3pobot/botsocketclient",
     "compression": "^1.7.4",
     "discord.js": "^14.11.0",
     "express": "^4.18.2",
-    "mongowrapper": "github:c3pobot/mongowrapper",
+    "mongoapiclient": "github:c3pobot/mongoapiclient",
     "quewrapper": "github:c3pobot/quewrapper",
-    "socket.io": "^4.6.2"
+    "socket.io-client": "^4.7.1"
   }
 }

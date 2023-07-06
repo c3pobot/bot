@@ -5,6 +5,7 @@ RUN npm install --omit=dev
 
 FROM node:16-alpine AS app
 WORKDIR /app
+ENV NODE_PATH=/app/src
 
 COPY --from=builder node_modules node_modules/
 COPY . .
