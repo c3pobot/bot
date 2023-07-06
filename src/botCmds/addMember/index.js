@@ -1,7 +1,8 @@
 'use strict'
+const { msgOpts } = require('helpers/msgOpts')
 const SendJoin = require('./sendJoin')
 const SendWelcome = require('./sendWelcome')
-module.exports = async(member, msgOpts, bot)=>{
+module.exports = async(member, bot)=>{
   try{
     const info = msgOpts?.member.find(x=>x.sId === member?.guild?.id)
     if(!info) return;

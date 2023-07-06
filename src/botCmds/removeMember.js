@@ -1,5 +1,6 @@
 'use strict'
-module.exports = async(member, msgOpts, bot)=>{
+const { msgOpts } = require('helpers/msgOpts')
+module.exports = async(member, bot)=>{
   try{
     const info = msgOpts.member.find(x=>x.sId === member?.guild?.id)
     if(!info?.memberLeave) return;

@@ -1,5 +1,6 @@
 'use strict'
-module.exports = async(msg, msgOpts, bot)=>{
+const { msgOpts } = require('helpers/msgOpts')
+module.exports = async(msg, bot)=>{
   try{
     if(!msg.guild || msg.author.bot) return;
     if(!bot) return

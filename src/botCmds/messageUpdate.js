@@ -1,4 +1,5 @@
 'use strict'
+const { msgOpts } = require('helpers/msgOpts')
 const TruncateStr = (str, num)=>{
   try{
     if(str.length <= num){
@@ -10,7 +11,7 @@ const TruncateStr = (str, num)=>{
     throw(e)
   }
 }
-module.exports = async(obj = {}, msgOpts, bot)=>{
+module.exports = async(obj = {}, bot)=>{
   try{
     if(!obj.newMsg || !obj.oldMsg || obj.newMsg?.author?.bot || !obj.newMsg?.guild) return;
     let info = msgOpts.message?.find(x=>x.sId === obj.newMsg?.guild?.id)

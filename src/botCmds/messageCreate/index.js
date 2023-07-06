@@ -4,11 +4,11 @@ const CheckForInvite = require('./checkForInvite')
 const HELP_SERVER = process.env.BOT_HELP_SERVER_ID
 const CustomReaction = require('./customReaction')
 
-module.exports = async(msg, msgOpts, bot)=>{
+module.exports = async(msg, bot)=>{
   try{
     if(!msg?.guild || msg?.author?.bot) return;
-    CustomReaction(msg, msgOpts)
-    let auth = await CheckBasicAllowed(msg, msgOpts)
+    CustomReaction(msg)
+    let auth = await CheckBasicAllowed(msg)
     if(!auth) return;
     if(msg.guild.id === HELP_SERVER) CheckForInvite(msg)
   }catch(e){

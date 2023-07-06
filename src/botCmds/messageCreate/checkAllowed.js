@@ -1,8 +1,9 @@
 'use strict'
+const { msgOpts } = require('helpers/msgOpts')
 const BOT_OWNER_ID = process.env.BOT_OWNER_ID
 const BOT_STALKER_ID = process.env.BOT_STALKER_ID
 const PRIVATE_BOT = +process.env.PRIVATE_BOT || 0
-module.exports.CheckBasicAllowed = async(msg, msgOpts, usr = null)=>{
+module.exports.CheckBasicAllowed = async(msg, usr = null)=>{
   try{
     if(PRIVATE_BOT > 0) return 1;
     if(msgOpts?.vip?.filter(x=>x === msg?.author?.id).length > 0) return 1;
@@ -13,7 +14,7 @@ module.exports.CheckBasicAllowed = async(msg, msgOpts, usr = null)=>{
     throw(e);
   }
 }
-module.exports.CheckPrivateAllowed = async(msg, msgOpts)=>{
+module.exports.CheckPrivateAllowed = async(msg)=>{
   try{
     if(PRIVATE_BOT > 0) return 1;
     if(msg.author.id === BOT_OWNER_ID) return 1;

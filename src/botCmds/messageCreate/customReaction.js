@@ -1,13 +1,14 @@
 'use strict'
-const { mongo } = require('mongoapiclient')
+const { msgOpts } = require('helpers/msgOpts')
+const mongo = require('mongoapiclient')
 const { CheckPrivateAllowed } = require('./checkAllowed')
 const GetQueName = require('./getQueName')
 const Translate = require('./translate')
 const PRIVATE_BOT = +process.env.PRIVATE_BOT || 0
-const CheckTranslate = async(msg, msgOpts)=>{
+const CheckTranslate = async(msg)=>{
   try{
     if(!msg.reference || !msg.content.toLowerCase().startsWith('translate')) return;
-    const queName = await GetQueName(msg, msgOpts)
+    const queName = await GetQueName(msg)
     if(!queName) return;
     Translate(msg, queName, null, null)
   }catch(e){
@@ -45,7 +46,7 @@ const getResponse = (array, phrase, anywhere)=>{
   }
 }
 
-const CheckReaction = async(msg, msgOpts)=>{
+const CheckReaction = async(msg)=>{
   try{
     let acrResponse, args = [], vipAcr = [], gAcr = [], localAcr = [], content = []
     if(msg.content) content = msg.content.toString().trim().toLowerCase().split(' ')
@@ -82,9 +83,9 @@ const CheckReaction = async(msg, msgOpts)=>{
     throw(e);
   }
 }
-module.exports = async(msg, msgOpts)=>{
+module.exports = async(msg)=>{
   try{
-    let auth = await CheckPrivateAllowed(msg, msgOpts)
+    let auth = await CheckPrivateAllowed(msg)
     if(!auth) return
     CheckTranslate(msg, msgOpts)
     CheckReaction(msg, msgOpts)
