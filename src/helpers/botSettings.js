@@ -1,12 +1,12 @@
 'use strict'
 const mongo = require('mongoapiclient')
-let botSettings = {}
+let botSettings = { map: {} }
 const update = async(notify = false)=>{
   try{
     let checkTime = 60, notifyUpdate = false
     let obj = (await mongo.find('botSettings', {_id: "1"}))[0]
     if(obj){
-      botSettings = obj
+      botSettings.map = obj
       if(notify) console.log('botSettings updated...')
     }else{
       if(notify) notifyUpdate = true

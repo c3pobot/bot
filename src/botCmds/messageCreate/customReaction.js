@@ -4,7 +4,6 @@ const mongo = require('mongoapiclient')
 const { CheckPrivateAllowed } = require('./checkAllowed')
 const GetQueName = require('./getQueName')
 const Translate = require('./translate')
-const PRIVATE_BOT = +process.env.PRIVATE_BOT || 0
 const CheckTranslate = async(msg)=>{
   try{
     if(!msg.reference || !msg.content.toLowerCase().startsWith('translate')) return;
@@ -85,7 +84,7 @@ const CheckReaction = async(msg)=>{
 }
 module.exports = async(msg)=>{
   try{
-    let auth = await CheckPrivateAllowed(msg)
+    let auth = CheckPrivateAllowed(msg)
     if(!auth) return
     CheckTranslate(msg, msgOpts)
     CheckReaction(msg, msgOpts)

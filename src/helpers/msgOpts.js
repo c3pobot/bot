@@ -7,7 +7,7 @@ const updateVip = async()=>{
     let res = []
     let vip = await mongo.find('vip', {status: 1}, {_id: 1})
     if(vip?.length > 0) res = vip.map(x=>x._id)
-    if(botSettings?.boCR) res = res.concat(obj.boCR)
+    if(botSettings?.map?.boCR) res = res.concat(obj.boCR)
     msgOpts.vip = res;
   }catch(e){
     throw(e);
