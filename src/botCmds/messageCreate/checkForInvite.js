@@ -4,7 +4,7 @@ module.exports = (msg)=>{
   try{
     if(!botSettings.map.botInvite) return
     const args = msg?.content?.trim().split(/ +/g);
-    if(args.filter(x=>x.toLowerCase() == 'invite').length > 0)
+    if(args.filter(x=>x.toLowerCase() === 'invite').length === 0) return
     let embedMsg = {
       description: '',
       color: 15844367
