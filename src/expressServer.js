@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const PORT = process.env.HEALTH_PORT || 3001
+const PORT = process.env.PORT || 3001
 const POD_NAME = process.env.POD_NAME
 const app = express()
 app.use(bodyParser.json({
