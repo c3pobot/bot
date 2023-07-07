@@ -1,5 +1,6 @@
 .git
 .gitignore
+.dockerignore
 .env
 .env.example
 .testregistry
