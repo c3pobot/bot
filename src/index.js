@@ -1,4 +1,7 @@
 'use strict'
+const log = require('logger')
+let logLevel = process.env.LOG_LEVEL || log.Level.INFO;
+log.setLevel(logLevel);
 const POD_NAME = process.env.POD_NAME
 const BOT_BRIDGE_URI = process.env.BOT_BRIDGE_URI
 const SocketClient = require('./socket')
@@ -13,12 +16,14 @@ let botReady = false, SHARD_NUM, NUM_SHARDS, bot
 
 SocketClient.socket.on('request', async(cmd, obj = {}, callback)=>{
   try{
+    log.debug(cmd)
+    log.debug(JSON.stringify(obj))
     let res
     if(SocketCmds[cmd] && obj.podName === POD_NAME) res = await SocketCmds[cmd](obj, bot)
     if(callback) callback(res)
   }catch(e){
-    console.error(e)
-    if(callback) callback()
+    log.error(e)
+    if(callback) callback({status: 'error', message: e.message || 'error occured'})
   }
 })
 const createBot = ()=>{
@@ -48,7 +53,7 @@ const createBot = ()=>{
   })
   bot.on('ready', async()=>{
     botReady = true;
-    console.log('bot-'+SHARD_NUM+' has started in '+bot.guilds.cache.size+' guilds')
+    log.info('bot-'+SHARD_NUM+' has started in '+bot.guilds.cache.size+' guilds')
   });
   bot.on('messageCreate', (msg) =>{
     if(msg.author.bot) return
@@ -78,7 +83,7 @@ const StartBot = async()=>{
     }
     setTimeout(StartBot, 5000)
   }catch(e){
-    console.error(e);
+    log.error(e);
     setTimeout(StartBot, 5000)
   }
 }
@@ -91,7 +96,7 @@ const CheckMongo = async()=>{
     }
     setTimeout(CheckMongo, 5000)
   }catch(e){
-    console.error(e);
+    log.error(e);
     setTimeout(CheckMongo, 5000)
   }
 }

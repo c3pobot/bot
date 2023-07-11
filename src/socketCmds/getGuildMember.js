@@ -20,6 +20,6 @@ module.exports = async(obj = {}, bot)=>{
     res.perms = usr?.permissions.toArray()
     return res
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

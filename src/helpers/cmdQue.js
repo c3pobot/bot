@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const QueWrapper = require('quewrapper')
 const USE_PRIVATE = process.env.USE_PRIVATE_WORKERS || false
 const CmdQue = {}
@@ -19,7 +20,7 @@ const CreateQues = async()=>{
 const CreateQue = async(queName)=>{
 	try{
 		if(!queName) return
-		CmdQues[queName].que = new QueWrapper({queName: queName, queOptions: {redis: redisConnection}})
+		CmdQues[queName].que = new QueWrapper({queName: queName, queOptions: {redis: redisConnection}, logger: log})
 		console.log('Created '+queName+' job que...')
 		return true
 	}catch(e){

@@ -9,6 +9,6 @@ module.exports = async(obj = {}, bot)=>{
     if(!role) role = await guild?.roles?.fetch(obj.roleId)
     return role
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const mongo = require('mongoapiclient')
 const { botSettings } = require('./botSettings')
 let msgOpts = { private: [], basic: [], member: [], message: [], vip: [] }
@@ -34,10 +35,10 @@ const update = async(notify = false)=>{
   try{
     await updateVip()
     await updateServers()
-    if(notify) console.log('msgOpts updated...')
+    if(notify) log.info('msgOpts updated...')
     setTimeout(update, 60000)
   }catch(e){
-    console.error(e);
+    log.error(e);
     setTimeout(()=>update(notify), 5000)
   }
 }

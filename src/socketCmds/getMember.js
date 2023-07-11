@@ -6,6 +6,6 @@ module.exports = async(obj = {}, bot)=>{
     if(!usr) usr = await bot.users?.fetch(obj.dId)
     return usr
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

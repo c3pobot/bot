@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
@@ -16,5 +17,5 @@ app.get('/healthz', (req, res)=>{
   res.status(200).json({res: 'ok'})
 })
 const server = app.listen(PORT, ()=>{
-  console.log(POD_NAME+' is listening on '+server.address().port)
+  log.info(POD_NAME+' is listening on '+server.address().port)
 })

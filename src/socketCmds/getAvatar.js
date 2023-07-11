@@ -9,6 +9,6 @@ module.exports = async(obj = {}, bot)=>{
     if(!guildUser) return;
     return await guildUser?.user?.avatarURL({format: 'png', dynamic: true, size: 256})
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

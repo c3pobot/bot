@@ -7,6 +7,6 @@ module.exports = (obj = {}, bot)=>{
     res.users = bot?.guilds?.cache?.reduce((acc, guild) => acc + guild.memberCount, 0)
     return res
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

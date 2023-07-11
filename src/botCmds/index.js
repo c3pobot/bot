@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { msgOpts } = require('helpers/msgOpts')
 const Cmds = {}
 Cmds.addMember = require('./addMember')
@@ -11,6 +12,6 @@ module.exports = async(obj, cmdType = 'reaction', bot)=>{
   try{
     if(Cmds[cmdType]) Cmds[cmdType](obj, bot)
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

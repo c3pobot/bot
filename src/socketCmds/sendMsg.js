@@ -1,13 +1,19 @@
 'use strict'
+const log = require('logger')
 const getChannel = require('./getChannel')
 module.exports = async(obj = {}, bot)=>{
   try{
+    log.debug(JSON.stringify(obj))
     if(!obj.chId || !obj.content) return
     let res = {status: 'error'}
-    const channel = await getChannel(obj.chId)
-    if(!channel) return {status: 'error', msg: 'Error getting channel '+obj.chId}
-    return await channel.send(content)
+    let channel = await getChannel(obj, bot)
+    if(channel) log.debug(channel.id)
+    if(!channel){
+      log.debug('Error getting channel '+obj.chId)
+      return {status: 'error', msg: 'Error getting channel '+obj.chId}
+    }
+    return await channel.send(obj.content)
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

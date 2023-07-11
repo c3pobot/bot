@@ -10,6 +10,6 @@ module.exports = async(obj = {}, bot)=>{
     const roles = guildUser.roles?.cache?.map(x=>x.id)
     return roles
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

@@ -6,6 +6,6 @@ module.exports = async(obj = {}, bot)=>{
     if(!res) res = await bot?.guilds?.fetch(obj.sId)
     return res
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

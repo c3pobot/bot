@@ -10,4 +10,5 @@ Cmds.getMemberGuilds = require('./getMemberGuilds')
 Cmds.getMember = require('./getMember')
 Cmds.getRole = require('./getRole')
 Cmds.getServerStats = require('./getServerStats')
+Cmds.sendMsg = require('./sendMsg')
 module.exports = Cmds

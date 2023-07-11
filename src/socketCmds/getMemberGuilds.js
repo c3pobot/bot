@@ -12,6 +12,6 @@ module.exports = async(obj={}, bot)=>{
     })
     return res
   }catch(e){
-    console.error(e)
+    throw(e)
   }
 }

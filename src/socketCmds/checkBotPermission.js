@@ -4,6 +4,6 @@ module.exports = async(channel, perm)=>{
     if(!channel || !perm) return
     return await channel?.permissionsFor(channel.guild?.me).has(perm)
   }catch(e){
-    console.error(e);
+    throw(e);
   }
 }

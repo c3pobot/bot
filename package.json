@@ -4,6 +4,7 @@
   "description": "c3po bot client",
   "main": "index.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh",
     "build": "chmod a+x buildtestimage.sh && ./buildtestimage.sh c3pobot/bot",
     "prod": "chmod a+x buildprodimage.sh && ./buildprodimage.sh c3pobot/bot"
@@ -15,6 +16,7 @@
     "compression": "^1.7.4",
     "discord.js": "^14.11.0",
     "express": "^4.18.2",
+    "logger": "github:c3pobot/logger",
     "mongoapiclient": "github:c3pobot/mongoapiclient",
     "quewrapper": "github:c3pobot/quewrapper",
     "socket.io-client": "^4.7.1"
