@@ -4,9 +4,9 @@ const QueWrapper = require('quewrapper')
 const USE_PRIVATE = process.env.USE_PRIVATE_WORKERS || false
 const CmdQue = {}
 const redisConnection = {
-	host: process.env.QUE_SERVER,
-	port: +process.env.QUE_PORT,
-	password: process.env.QUE_PASS
+	host: process.env.REDIS_SERVER,
+	port: +process.env.REDIS_PORT,
+	password: process.env.REDIS_PASS
 }
 const CreateQues = async()=>{
   try{
