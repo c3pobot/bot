@@ -1,5 +1,5 @@
 'use strict'
-const getAccountAge = (timeStamp)=>{
+module.exports = (timeStamp)=>{
   try{
     let timeDiff = +Date.now() - +timeStamp
     timeDiff = Math.floor(timeDiff / 1000)

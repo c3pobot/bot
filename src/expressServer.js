@@ -1,9 +1,8 @@
 'use strict'
-const log = require('logger')
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const POD_NAME = process.env.POD_NAME
+
 const app = express()
 app.use(bodyParser.json({
   limit: '500MB',

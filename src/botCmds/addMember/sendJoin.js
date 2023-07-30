@@ -27,7 +27,7 @@ module.exports = async(member, chId, bot)=>{
         name: '**Account Age**',
         value: new Date(member.user.createdTimestamp)
       }
-      tempField.value = await getAccountAge(member.user.createdTimestamp)
+      tempField.value = getAccountAge(member.user.createdTimestamp)
       embedMsg.fields.push(tempField)
     }
     channel.send({embeds: [embedMsg]})
