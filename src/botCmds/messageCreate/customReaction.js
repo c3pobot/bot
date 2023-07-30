@@ -56,7 +56,7 @@ const CheckReaction = async(msg)=>{
     }
     if(msgOpts?.vip?.filter(x=>x === msg?.author?.id).length > 0){
       const vip = (await mongo.find('vip', {_id: msg?.author?.id}))[0]
-      if(vip?.status) vipCR = await getReactions(msg?.author?.id)
+      if(vip?.status) vipAcr = await getReactions(msg?.author?.id)
     }
     let phrase = content.shift().toLowerCase()
     for(let i in content) phrase += ' '+content[i].toLowerCase()
