@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { msgOpts } = require('helpers/msgOpts')
 const BOT_OWNER_ID = process.env.BOT_OWNER_ID
 const BOT_STALKER_ID = process.env.BOT_STALKER_ID

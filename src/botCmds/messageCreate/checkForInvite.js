@@ -3,7 +3,7 @@ const { botSettings } = require('helpers/botSettings')
 module.exports = (msg)=>{
   try{
     if(!botSettings.map.botInvite) return
-    const args = msg?.content?.trim().split(/ +/g);
+    let args = msg?.content?.trim().split(/ +/g);
     if(args.filter(x=>x.toLowerCase() === 'invite').length === 0) return
     let embedMsg = {
       description: '',
