@@ -1,8 +1,9 @@
 'use strict'
 const log = require('logger')
 const path = require('path')
+const mongo = require('mongoapiclient')
+
 const { Client, GatewayIntentBits } = require('discord.js');
-const { mongoStatus } = require('mongoapiclient')
 const { CreateQues } = require('./helpers/cmdQue')
 
 const RemoteCmds = require('./remoteCmds')
@@ -139,7 +140,7 @@ const StartBot = async()=>{
 }
 const CheckMongo = async()=>{
   try{
-    let status = mongoStatus()
+    let status = mongo.status()
     if(status){
       CreateQues()
       StartBot()
