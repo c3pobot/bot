@@ -4,12 +4,18 @@ const mongo = require('mongoapiclient')
 const { CheckPrivateAllowed } = require('./checkAllowed')
 const GetQueName = require('./getQueName')
 const Translate = require('./translate')
-const CheckTranslate = async(msg)=>{
+const PRIVATE_BOT = process.env.PRIVATE_BOT || false
+
+const CheckTranslate = async(msg, bot)=>{
   try{
-    if(!msg.reference || !msg.content.toLowerCase().startsWith('translate')) return;
-    const queName = await GetQueName(msg)
+    if(!bot || !msg.reference || !msg.content.toLowerCase().startsWith('translate')) return;
+    let channel = await bot.channels?.fetch(msg?.reference?.channelId)
+    if(!channel) return
+    let msgRef = await channel.messages.fetch(msg?.reference?.messageId)
+    if(!msgRef) return
+    let queName = await GetQueName(msg)
     if(!queName) return;
-    Translate(msg, queName, null, null)
+    Translate(msgRef, queName, msg.author, null)
   }catch(e){
     throw(e);
   }
@@ -50,7 +56,7 @@ const CheckReaction = async(msg)=>{
     let acrResponse, args = [], vipAcr = [], gAcr = [], localAcr = [], content = []
     if(msg.content) content = msg.content.toString().trim().toLowerCase().split(' ')
     if(!(content?.length > 0)) return
-    if(msgOpts?.private?.filter(x=>x === msg?.guild?.id).length > 0){
+    if(msgOpts?.private?.filter(x=>x === msg?.guild?.id).length > 0 || PRIVATE_BOT){
       gAcr = await getReactions('global')
       localAcr = await getReactions(msg?.guild?.id)
     }
@@ -82,12 +88,12 @@ const CheckReaction = async(msg)=>{
     throw(e);
   }
 }
-module.exports = async(msg)=>{
+module.exports = async(msg, bot)=>{
   try{
     let auth = CheckPrivateAllowed(msg)
     if(!auth) return
-    CheckTranslate(msg, msgOpts)
-    CheckReaction(msg, msgOpts)
+    CheckTranslate(msg, bot)
+    CheckReaction(msg)
   }catch(e){
     throw(e)
   }

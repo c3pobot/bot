@@ -30,14 +30,7 @@ module.exports = async(msg, cmdType = 'reaction')=>{
       perms: (botPerms ? botPerms:[]),
       reference: msg.reference,
       content: msg.content,
-      createdTimestamp: msg.author.createdTimestamp,
-      joinedTimestamp: (msg.guild.members.cache.get(msg.author.id) ? msg.guild.members.cache.get(msg.author.id).joinedTimestamp:null),
-      roles: [],
-      musers: [],
-      mroles: [],
-      mchannels: [],
-      guildPerms: msg.channel.guild.me.permissions.toArray(),
-      tag: msg.author.tag,
+      guildPerms: msg?.channel?.guild?.me?.permissions?.toArray(),
     }
     res.avatarURL = await msg.author.avatarURL({format: 'png', dynamic: true, size: 256})
     if(msg.member.roles.cache.size > 0) res.roles = msg.member.roles.cache.map(r=>{

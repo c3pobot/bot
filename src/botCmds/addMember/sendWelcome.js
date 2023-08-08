@@ -1,5 +1,5 @@
 'use strict'
-module.exports = async(member, chId, msg)=>{
+module.exports = async(member, chId, msg, bot)=>{
   try{
     if(!bot) return
     let channel = await bot.channels?.fetch(chId)

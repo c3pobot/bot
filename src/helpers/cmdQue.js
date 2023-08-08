@@ -1,12 +1,22 @@
 'use strict'
 const log = require('logger')
-const QueWrapper = require('quewrapper')
+const Queue = require('bull')
+const { v4: uuidv4 } = require('uuid')
 const USE_PRIVATE = process.env.USE_PRIVATE_WORKERS || false
-const CmdQue = {}
-const redisConnection = {
-	host: process.env.REDIS_SERVER,
-	port: +process.env.REDIS_PORT,
-	password: process.env.REDIS_PASS
+const CmdQues = {}
+const queOptions = {
+	redis: {
+    host: process.env.REDIS_SERVER,
+    port: +process.env.REDIS_PORT,
+    password: process.env.REDIS_PASS
+  },
+  defaultJobOptions: {
+    removeOnComplete: true,
+    removeOnFail: true
+  },
+  settings: {
+    maxStalledCount: 0
+  }
 }
 const CreateQues = async()=>{
   try{
@@ -14,24 +24,30 @@ const CreateQues = async()=>{
 		if(status && USE_PRIVATE) status = await CreateQue('discordPrivate')
     return status
   }catch(e){
-    throw(e)
+    log.error(e)
+		setTimeout(CreateQues, 5000)
   }
 }
 const CreateQue = async(queName)=>{
 	try{
 		if(!queName) return
-		CmdQues[queName].que = new QueWrapper({queName: queName, queOptions: {redis: redisConnection}, logger: log})
-		console.log('Created '+queName+' job que...')
+		CmdQues[queName] = new Queue(queName, queOptions)
+		log.info('Created '+queName+' job que...')
 		return true
 	}catch(e){
 		throw(e);
 	}
 }
 module.exports.CreateQues = CreateQues
-module.exports.CmdQueAdd = async(type, job)=>{
+module.exports.CmdQueAdd = async(type, data = {}, jobOpts = {})=>{
 	try{
 		if(!USE_PRIVATE) type = 'discord'
-		if(CmdQues[type]?.que) return await CmdQues[type].que.newJob(job)
+		if(CmdQues[type]){
+			await CmdQues[type].clean(10000, 'failed');
+			if(!jobOpts.jobId) jobOpts.jobId = data.id
+			if(!jobOpts.jobId) jobOpts.jobId = uuidv4()
+			return await CmdQues[type].add(data, jobOpts)
+		}
 	}catch(e){
 		throw(e)
 	}

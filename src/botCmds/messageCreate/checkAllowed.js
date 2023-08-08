@@ -3,7 +3,7 @@ const log = require('logger')
 const { msgOpts } = require('helpers/msgOpts')
 const BOT_OWNER_ID = process.env.BOT_OWNER_ID
 const BOT_STALKER_ID = process.env.BOT_STALKER_ID
-const PRIVATE_BOT = +process.env.PRIVATE_BOT || false
+const PRIVATE_BOT = process.env.PRIVATE_BOT || false
 module.exports.CheckBasicAllowed = (msg, usr = null)=>{
   try{
     if(PRIVATE_BOT) return true;

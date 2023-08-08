@@ -1,9 +1,16 @@
 'use strict'
 const getMsg = require('./getMsg')
+
+const POD_NAME = process.env.POD_NAME
+
 module.exports = async(obj = {}, bot)=>{
   try{
 
     if(!obj.msgId || !obj.chId || (!obj.content && !obj.msg)) return
+    if(obj.content && !obj.msg){
+      obj.msg = obj.content
+      if(typeof obj.msg != 'object' && typeof obj.msg == 'string') obj.msg = {content: obj.msg}
+    }
     let msg = await getMsg(obj, bot)
     if(!msg) return { status: 'error', msg: 'Error getting message '+obj.msgId }
     if(obj.file || obj.files){
@@ -15,8 +22,9 @@ module.exports = async(obj = {}, bot)=>{
       delete obj.file
       delete obj.files
     }
-    return await msg.edit(obj.msg || obj.content)
+    return await msg.edit(obj.msg)
   }catch(e){
+    log.error(`pod: ${POD_NAME}, method: editMsg, sId: ${obj.sId}, chId : ${obj.dId}, msgId : ${obj.msgId}`)
     throw(e)
   }
 }

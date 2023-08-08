@@ -1,33 +1,53 @@
 'use strict'
 const log = require('logger')
 const path = require('path')
-const k8api = require('./k8api')
 const { Client, GatewayIntentBits } = require('discord.js');
 const { mongoStatus } = require('mongoapiclient')
+const { CreateQues } = require('./helpers/cmdQue')
 
 const RemoteCmds = require('./remoteCmds')
 const BotCmds = require('./botCmds')
+const informer = require('./informer')
 const fetch = require('./fetch')
 const app = require('./expressServer')
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const PORT = process.env.PORT || 3000
 const POD_NAME = process.env.POD_NAME
+const SET_NAME = process.env.SET_NAME || 'bot'
+const NAME_SPACE = process.env.POD_NAMESPACE
 
 let botReady = false, SHARD_NUM, NUM_SHARDS, bot
+if(POD_NAME && SET_NAME) SHARD_NUM = +POD_NAME.replace(`${SET_NAME}-`, '')
 app.get('/getNumShards', (req, res)=>{
-  res.json({totalShards: NUM_SHARDS})
+  res.status(200).json({totalShards: NUM_SHARDS})
 })
 app.post('/cmd', (req, res)=>{
   handleRequest(req, res)
 })
 const server = app.listen(PORT, ()=>{
-  log.info(POD_NAME+' is listening on port '+server.address().port)
+  log.info(`${POD_NAME} is listening on port ${server.address().port}`)
 })
+informer.on('add', (obj) => {
+  if(obj?.metadata?.name === SET_NAME){
+    log.info(`${SET_NAME} replica's detected ${obj?.spec?.replicas}`)
+    NUM_SHARDS = +obj?.spec?.replicas
+
+  }
+});
+informer.on('update', (obj) => {
+  if(obj?.metadata?.name === SET_NAME && NUM_SHARDS !== obj?.spec?.replicas){
+    if(SHARD_NUM >= 0 && BOT_TOKEN) recreateBot(obj?.spec?.replicas)
+  }
+});
 const handleRequest = async(req, res)=>{
   try{
     if(!req?.body || req?.body?.podName !== POD_NAME || !req?.body?.cmd || !RemoteCmds[req?.body?.cmd]){
       res.sendStatus(400)
+      return
+    }
+    if(req.body.numShards >= 0 && NUM_SHARDS >= 0 && req.body.numShards !== NUM_SHARDS){
+      res.status(200).json({ totalShards: NUM_SHARDS })
       return
     }
     let response = await RemoteCmds[req.body.cmd](req.body, bot)
@@ -91,24 +111,10 @@ const createBot = ()=>{
   })
   bot.login(BOT_TOKEN)
 }
-const monitorReplica = async()=>{
-  try{
-    if(NUM_SHARDS && NUM_SHARDS > 0){
-      let numShards = await k8api.getNumShards()
-      if(numShards && +numShards !== NUM_SHARDS){
-        await recreateBot(+numShards)
-      }
-    }
-    setTimeout(monitorReplica, 5000)
-  }catch(e){
-    log.error(e)
-    setTimeout(monitorReplica, 5000)
-  }
-}
 const recreateBot = async(numShards)=>{
   try{
     if(numShards > 0 && bot){
-      log.info('Number of bot shards changed from '+NUM_SHARDS+' to '+numShards+' recreating bot...')
+      log.info(`Number of bot shards changed from ${NUM_SHARDS} to ${numShards} recreating bot...`)
       await bot.destroy()
       bot = null
       NUM_SHARDS = numShards
@@ -121,9 +127,6 @@ const recreateBot = async(numShards)=>{
 const StartBot = async()=>{
   try{
     if(!POD_NAME) throw('POD_NAME not supplied...')
-    let res = await k8api.getShardNum()
-    if(!res) throw("Error getting shard number...")
-    SHARD_NUM = +res?.shardNum, NUM_SHARDS = +res?.totalShards
     if(SHARD_NUM >= 0 && NUM_SHARDS && BOT_TOKEN){
       createBot()
       return
@@ -138,6 +141,7 @@ const CheckMongo = async()=>{
   try{
     let status = mongoStatus()
     if(status){
+      CreateQues()
       StartBot()
       return
     }
@@ -148,4 +152,3 @@ const CheckMongo = async()=>{
   }
 }
 CheckMongo()
-monitorReplica()
