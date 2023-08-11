@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const getMsg = require('./getMsg')
 
 const POD_NAME = process.env.POD_NAME
@@ -24,7 +25,7 @@ module.exports = async(obj = {}, bot)=>{
     }
     return await msg.edit(obj.msg)
   }catch(e){
-    log.error(`pod: ${POD_NAME}, method: editMsg, sId: ${obj.sId}, chId : ${obj.dId}, msgId : ${obj.msgId}`)
+    log.error(`pod: ${POD_NAME}, method: editMsg, sId: ${obj.sId}, chId : ${obj.chId}, msgId : ${obj.msgId}`)
     throw(e)
   }
 }
