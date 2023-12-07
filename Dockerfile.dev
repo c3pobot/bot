@@ -11,7 +11,7 @@ RUN apk update && \
   # https://github.com/krallin/tini#using-tini
   apk add --no-cache tini && \
   rm -rf /var/cache/apk/*
-
+RUN npm install -g nodemon
 COPY --from=builder node_modules node_modules/
 COPY package*.json ./
 COPY index.js index.js
@@ -19,4 +19,4 @@ COPY src ./src
 
 USER node
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD [ "node", "index.js" ]
+CMD [ "nodemon", "./index.js" ]

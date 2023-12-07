@@ -1,5 +1,5 @@
 const CreateQueObj = require('./createQueObj')
-const { CmdQueAdd } = require('helpers/cmdQue')
+const CmdQue = require('cmdQue')
 module.exports = async(msg, queName, usr, emoji)=>{
   try{
     let msgObj = await CreateQueObj(msg, 'translate')
@@ -11,7 +11,8 @@ module.exports = async(msg, queName, usr, emoji)=>{
     }
     if(emoji) msgObj.emojiName = emoji
     if(usr) msgObj.dId = usr.id
-    CmdQueAdd(queName, msgObj)
+    console.log(queName)
+    CmdQue.add(queName, msgObj)
   }catch(e){
     throw(e);
   }

@@ -11,5 +11,5 @@ else
 fi
 container="${registry}/${tag}:test"
 echo building $container
-docker build -t $container .
+docker build -f Dockerfile.dev -t $container .
 docker push $container

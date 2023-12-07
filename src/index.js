@@ -4,10 +4,12 @@ const path = require('path')
 const mongo = require('mongoapiclient')
 
 const { Client, GatewayIntentBits } = require('discord.js');
-const { CreateQues } = require('./helpers/cmdQue')
 
 const RemoteCmds = require('./remoteCmds')
 const BotCmds = require('./botCmds')
+const ProcessCmds = require('./processCmds')
+const CmdQue = require('cmdQue')
+const redis = require('redisclient')
 const informer = require('./informer')
 const fetch = require('./fetch')
 const app = require('./expressServer')
@@ -85,6 +87,9 @@ const createBot = ()=>{
     botOpts.shardCount = NUM_SHARDS
   }
   bot = new Client(botOpts);
+  bot.on('interactionCreate', interaction => {
+    ProcessCmds(interaction)
+  });
   bot.on('guildMemberAdd', member => {
      BotCmds(member, 'addMember', bot)
   })
@@ -138,11 +143,24 @@ const StartBot = async()=>{
     setTimeout(StartBot, 5000)
   }
 }
+const CheckRedis = ()=>{
+  try{
+    let status = redis.status()
+    if(status){
+      CheckMongo()
+      return
+    }
+    setTimeout(CheckRedis, 5000)
+  }catch(e){
+    log.error(e)
+    setTimeout(CheckRedis, 5000)
+  }
+}
 const CheckMongo = async()=>{
   try{
     let status = mongo.status()
     if(status){
-      CreateQues()
+      await CmdQue.start()
       StartBot()
       return
     }
@@ -152,4 +170,4 @@ const CheckMongo = async()=>{
     setTimeout(CheckMongo, 5000)
   }
 }
-CheckMongo()
+CheckRedis()
