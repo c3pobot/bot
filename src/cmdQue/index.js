@@ -1,4 +1,5 @@
 'use strict'
+const fs = require('fs')
 const log = require('logger')
 const Queue = require('bull')
 const { v4: uuidv4 } = require('uuid')
@@ -8,6 +9,8 @@ const CheckJob = require('./checkJob')
 
 const USE_PRIVATE = process.env.USE_PRIVATE_WORKERS || false
 const POD_NAME = process.env.POD_NAME || 'bot-0'
+let CHECK_TEST_WORKER = process.env.CHECK_TEST_WORKER || false
+let TEST_WORKER = false
 let workerTypes = ['discord', 'oauth', 'swgoh'], POD_NUM
 if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
 
@@ -26,9 +29,21 @@ const queOptions = {
   }
 }
 let WorkerQues = {}
+const CheckTestWorker = async()=>{
+	try{
+		let data = await fs.readFileSync('/app/src/cmdQue/testWorker.json')
+		if(data){
+			let obj = JSON.parse(data)
+			TEST_WORKER = obj.TEST_WORKER
+		}
+	}catch(e){
+		log.error(e)
+	}
+}
 const CreateQue = async(queName)=>{
   try{
-    log.log('Creating '+queName+' job que...')
+		if(TEST_WORKER) queName += 'Test'
+		log.log('Creating '+queName+' job que...')
     WorkerQues[queName] = new Queue(queName, queOptions)
 		if(POD_NUM === 0) createListeners(WorkerQues[queName], queName)
   }catch(e){
@@ -42,6 +57,9 @@ const CreateQues = async()=>{
       num = +array.pop()
     }
 		POD_NUM = +num
+		if(CHECK_TEST_WORKER) await CheckTestWorker()
+		if(TEST_WORKER) log.info('Creating TestWorker JobQues...')
+
     for(let i in workerTypes){
       await CreateQue(workerTypes[i])
       if(USE_PRIVATE) await CreateQue(workerTypes[i]+'Private')
@@ -56,12 +74,13 @@ module.exports.add = async(type, data = {}, jobId = null)=>{
 	try{
     let jobQue = type
     if(type?.includes('Private') && !WorkerQues[type]) jobQue = type?.replace('Private', '')
+		if(TEST_WORKER) jobQue += 'Test'
     if(!WorkerQues[jobQue]) return;
 		let jobOpts = { jobId: jobId || data.id }
 		if(!jobOpts.jobId) jobOpts.jobId = uuidv4()
 		await WorkerQues[jobQue].clean(10000, 'failed');
+
     let res = await WorkerQues[jobQue].add(data, jobOpts)
-		console.log(jobQue)
     CheckJob(data, WorkerQues[jobQue])
     return res
 	}catch(e){

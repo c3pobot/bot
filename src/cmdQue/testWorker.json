@@ -1,0 +1,4 @@
+{
+  "TEST_WORKER": false,
+  "MONGO_API_URI": "http://mongo-api-test:3000"
+}

@@ -38,6 +38,7 @@ module.exports = async(interaction = {})=>{
     if(opt?.type && miscCmds.filter(x=>x == opt?.type).length > 0){
       req.data.name = opt.type
       AddMiscJob(interaction)
+      interaction.update({ components: []})
       return;
     }
     let tempObj = await redis.get('button-'+opt.id)
@@ -50,6 +51,8 @@ module.exports = async(interaction = {})=>{
       tempObj.token = interaction.token
       tempObj.confirm = opt
       AddButtonJob(tempObj, interaction?.id)
+      interaction.update({ components: []});
+      return;
     }
     interaction.deferUpdate()
   }catch(e){

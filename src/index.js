@@ -1,18 +1,22 @@
 'use strict'
 const log = require('logger')
 const path = require('path')
+const fs = require('fs')
+
 const mongo = require('mongoapiclient')
-
-const { Client, GatewayIntentBits } = require('discord.js');
-
 const RemoteCmds = require('./remoteCmds')
 const BotCmds = require('./botCmds')
 const ProcessCmds = require('./processCmds')
 const CmdQue = require('cmdQue')
+const { Client, GatewayIntentBits } = require('discord.js');
+
+let CHECK_TEST_WORKER = process.env.CHECK_TEST_WORKER || false
+
 const redis = require('redisclient')
 const informer = require('./informer')
 const fetch = require('./fetch')
 const app = require('./expressServer')
+
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const PORT = process.env.PORT || 3000
@@ -45,6 +49,7 @@ informer.on('update', (obj) => {
 });
 const handleRequest = async(req, res)=>{
   try{
+    if(!RemoteCmds) return
     if(!req?.body || req?.body?.podName !== POD_NAME || !req?.body?.cmd || !RemoteCmds[req?.body?.cmd]){
       res.sendStatus(400)
       return
@@ -143,6 +148,29 @@ const StartBot = async()=>{
     setTimeout(StartBot, 5000)
   }
 }
+const ReadFile = async()=>{
+  try{
+    let file = await fs.readFileSync('/app/src/cmdQue/testWorker.json')
+    if(file) return JSON.parse(file)
+  }catch(e){
+    log.error(`Error reading testWorker.json file...`)
+  }
+}
+const CheckTestBot = async()=>{
+  try{
+    if(CHECK_TEST_WORKER){
+      let obj = await ReadFile()
+      console.log(obj)
+      if(obj?.TEST_WORKER && obj?.MONGO_API_URI) process.env.MONGO_API_URI = obj.MONGO_API_URI
+    }
+    console.log(process.env.MONGO_API_URI)
+
+    CheckRedis()
+  }catch(e){
+    log.error(e)
+    setTimeout(CheckTestBot, 5000)
+  }
+}
 const CheckRedis = ()=>{
   try{
     let status = redis.status()
@@ -170,4 +198,4 @@ const CheckMongo = async()=>{
     setTimeout(CheckMongo, 5000)
   }
 }
-CheckRedis()
+CheckTestBot()

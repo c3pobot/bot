@@ -5,7 +5,7 @@ RUN npm install --omit=dev
 
 FROM node:20-alpine AS app
 WORKDIR /app
-ENV NODE_PATH=/app
+ENV NODE_PATH=/app/src
 RUN apk update && \
   # wrap process in --init in order to handle kernel signals
   # https://github.com/krallin/tini#using-tini
