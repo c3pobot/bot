@@ -9,6 +9,7 @@ const CheckJob = require('./checkJob')
 
 const USE_PRIVATE = process.env.USE_PRIVATE_WORKERS || false
 const POD_NAME = process.env.POD_NAME || 'bot-0'
+const QUE_PREFIX = process.env.QUE_PREFIX
 let CHECK_TEST_WORKER = process.env.CHECK_TEST_WORKER || false
 let TEST_WORKER = false
 let workerTypes = ['discord', 'oauth', 'swgoh'], POD_NUM
@@ -43,7 +44,7 @@ const CheckTestWorker = async()=>{
 const CreateQue = async(queName)=>{
   try{
 		if(TEST_WORKER) queName += 'Test'
-		log.log('Creating '+queName+' job que...')
+		log.info(`Creating ${queName} job que...`)
     WorkerQues[queName] = new Queue(queName, queOptions)
 		if(POD_NUM === 0) createListeners(WorkerQues[queName], queName)
   }catch(e){
@@ -61,8 +62,11 @@ const CreateQues = async()=>{
 		if(TEST_WORKER) log.info('Creating TestWorker JobQues...')
 
     for(let i in workerTypes){
-      await CreateQue(workerTypes[i])
-      if(USE_PRIVATE) await CreateQue(workerTypes[i]+'Private')
+			let queName = ''
+			if(QUE_PREFIX) queName += `${QUE_PREFIX}_`
+			queName += workerTypes[i]
+      await CreateQue(queName)
+      if(USE_PRIVATE) await CreateQue(`${queName}Private`)
     }
   }catch(e){
     log.error(e);
@@ -72,8 +76,10 @@ const CreateQues = async()=>{
 module.exports.start = CreateQues
 module.exports.add = async(type, data = {}, jobId = null)=>{
 	try{
-    let jobQue = type
-    if(type?.includes('Private') && !WorkerQues[type]) jobQue = type?.replace('Private', '')
+    let jobQue = ''
+		if(QUE_PREFIX) jobQue += `${QUE_PREFIX}_`
+		jobQue += type
+    if(jobQue?.includes('Private') && !WorkerQues[jobQue]) jobQue = jobQue?.replace('Private', '')
 		if(TEST_WORKER) jobQue += 'Test'
     if(!WorkerQues[jobQue]) return;
 		let jobOpts = { jobId: jobId || data.id }

@@ -17,7 +17,7 @@ module.exports = async(interaction) =>{
       let cmdData = CmdToJSON(interaction)
       let status = await CmdQue.add(type, cmdData)
       if(!status?.timestamp) intialResponse = 'Oh dear! error adding command to the que'
-      mongo.set('interactions', {_id: cmdData.data.name}, cmdData)
+      //mongo.set('interactions', {_id: cmdData.data.name}, cmdData)
     }else{
       intialResponse = 'Oh dear! Command not recognized...'
     }
