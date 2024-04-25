@@ -1,5 +1,6 @@
 'use strict'
 const log = require('logger')
+require('./update')
 const { autoCompleteData } = require('./autoCompleteData')
 const getChoices = (obj={})=>{
   try{

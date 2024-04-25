@@ -1,6 +1,5 @@
 'use strict'
 const { CheckBasicAllowed } = require('./messageCreate/checkAllowed')
-const GetQueName = require('./messageCreate/getQueName')
 const Translate = require('./messageCreate/translate')
 module.exports = async(obj = {}, bot)=>{
   try{
@@ -12,9 +11,7 @@ module.exports = async(obj = {}, bot)=>{
     if(!msg) return
     let auth = await CheckBasicAllowed(msg)
     if(!auth) return;
-    let queName = await GetQueName(msg)
-    if(!queName) return;
-    Translate(msg, queName, obj.usr, obj.reaction?.emoji?.name)
+    Translate(msg, obj.usr, obj.reaction?.emoji?.name)
   }catch(e){
     throw(e);
   }

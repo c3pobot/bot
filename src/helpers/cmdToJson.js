@@ -73,6 +73,7 @@ module.exports = (obj = {})=>{
       type: obj.type,
       version: obj.version,
       createdTimestamp: obj.createdTimestamp,
+      timestamp: obj.createdTimestamp,
       message: obj.message?.toJSON()
     }
     return data

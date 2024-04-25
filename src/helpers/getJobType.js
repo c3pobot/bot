@@ -6,7 +6,6 @@ module.exports = async(interaction = {})=>{
     let type
     if(CmdMap?.map[interaction.commandName]) type = CmdMap?.map[interaction.commandName].worker
     if(!type) return
-    if(msgOpts?.private?.filter(x=>x === interaction.commandGuildId).length > 0) type += 'Private'
     return type
   }catch(e){
     throw(e);

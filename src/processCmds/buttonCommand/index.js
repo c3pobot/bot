@@ -2,14 +2,14 @@
 const log = require('logger')
 const redis = require('redisclient')
 const getJobType = require('./getJobType')
-const CmdToJSON = require('helpers/cmdToJson')
-const CmdQue = require('cmdQue')
-const AddButtonJob = async(obj = {}, jobId)=>{
+const cmdToJson = require('helpers/cmdToJson')
+const cmdQue = require('cmdQue')
+const AddButtonJob = async(obj = {})=>{
   try{
     const type = await getJobType(obj)
     await redis.del(obj.id)
     await redis.del('button-'+obj.id)
-    if(type) CmdQue.add(type, obj, jobId)
+    if(type) await cmdQue.add(type, obj)
   }catch(e){
     log.error(e)
   }
@@ -17,8 +17,8 @@ const AddButtonJob = async(obj = {}, jobId)=>{
 const AddMiscJob = async(interaction)=>{
   try{
     let type = await getJobType(interaction)
-    let cmdData = CmdToJSON(interaction)
-    if(type) CmdQue.add(type, cmdData)
+    let cmdData = cmdToJson(interaction)
+    if(type) await cmdQue.add(type, cmdData)
   }catch(e){
     log.error(e)
   }
@@ -49,6 +49,8 @@ module.exports = async(interaction = {})=>{
     }
     if(tempObj.member.user.id == interaction.user?.id){
       tempObj.token = interaction.token
+      tempObj.jobId = interaction.token
+      tempObj.timestamp = interaction.createdTimestamp
       tempObj.confirm = opt
       AddButtonJob(tempObj, interaction?.id)
       interaction.update({ components: []});

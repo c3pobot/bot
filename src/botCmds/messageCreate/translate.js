@@ -1,6 +1,7 @@
+const log = require('logger')
 const CreateQueObj = require('./createQueObj')
-const CmdQue = require('cmdQue')
-module.exports = async(msg, queName, usr, emoji)=>{
+const cmdQue = require('cmdQue')
+module.exports = async(msg, usr, emoji)=>{
   try{
     let msgObj = await CreateQueObj(msg, 'translate')
     msgObj = {
@@ -11,9 +12,8 @@ module.exports = async(msg, queName, usr, emoji)=>{
     }
     if(emoji) msgObj.emojiName = emoji
     if(usr) msgObj.dId = usr.id
-    console.log(queName)
-    CmdQue.add(queName, msgObj)
+    cmdQue.add('discord', msgObj)
   }catch(e){
-    throw(e);
+    log.error(e);
   }
 }

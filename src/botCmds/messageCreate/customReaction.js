@@ -1,8 +1,8 @@
 'use strict'
+const log = require('logger')
 const { msgOpts } = require('helpers/msgOpts')
 const mongo = require('mongoapiclient')
 const { CheckPrivateAllowed } = require('./checkAllowed')
-const GetQueName = require('./getQueName')
 const Translate = require('./translate')
 const PRIVATE_BOT = process.env.PRIVATE_BOT || false
 
@@ -13,11 +13,9 @@ const CheckTranslate = async(msg, bot)=>{
     if(!channel) return
     let msgRef = await channel.messages.fetch(msg?.reference?.messageId)
     if(!msgRef) return
-    let queName = await GetQueName(msg)
-    if(!queName) return;
-    Translate(msgRef, queName, msg.author, null)
+    Translate(msgRef, msg.author, null)
   }catch(e){
-    throw(e);
+    log.error(e);
   }
 }
 const getReactions = async(id)=>{
