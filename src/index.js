@@ -3,7 +3,7 @@ const log = require('logger');
 log.setLevel('debug');
 const { Client, GatewayIntentBits } = require('discord.js');
 const redis = require('redisclient');
-const mongo = require('mongoapiclient');
+const mongo = require('mongoclient');
 
 const { startBot } = require('./bot')
 const cmdQue = require('./cmdQue')
