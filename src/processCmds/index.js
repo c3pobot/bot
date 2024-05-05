@@ -1,12 +1,26 @@
 'use strict'
-const AutoComplete = require('./autoComplete')
-const ChatCommand = require('./chatCommand')
-const ButtonCommand = require('./buttonCommand')
-const SelectCommand = require('./selectCommand')
+const log = require('logger')
+const autoComplete = require('./autoComplete')
+const remoteCmd = require('./remoteCmd')
+const { localCmds, sendCmd } = require('src/cmds')
+
 module.exports = (interaction)=>{
-  if(interaction.isAutocomplete()) AutoComplete(interaction)
-  if(interaction.isButton()) ButtonCommand(interaction)
-  if(interaction.isCommand()) ChatCommand(interaction)
-  if(interaction.isStringSelectMenu()) SelectCommand(interaction)
-  return;
+  try{
+    if(!interaction) return
+    if(interaction.isAutocomplete()){
+      autoComplete(interaction)
+      return
+    }
+    let opt = interaction.customId
+    if(opt) opt = JSON.parse(opt)
+    let command = interaction.commandName || opt.cmd
+    if(!interaction) return
+    if(command && localCmds[command]){
+      sendCmd(command, interaction, opt)
+      return
+    }
+    remoteCmd(interaction)
+  }catch(e){
+    log.error(e)
+  }
 }

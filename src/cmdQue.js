@@ -2,6 +2,7 @@
 const log = require('logger')
 const rabbitmq = require('./helpers/rabbitmq')
 const { msgOpts } = require('./helpers/msgOpts')
+
 let WORKER_QUE_NAME_SPACE = process.env.WORKER_QUE_NAME_SPACE || 'default'
 let queues = [ 'swgoh', 'discord', 'oauth'], publisher, publisherReady
 if(process.env.WORKER_QUES) queues = JSON.parse(process.env.WORKER_QUES)

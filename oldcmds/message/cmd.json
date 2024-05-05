@@ -1,0 +1,27 @@
+{
+  "type": "private",
+  "cmd": {
+    "name": "message",
+    "description": "Send a message to a channel thru the bot (Server admin required)",
+    "options": [
+      {
+        "type": 7,
+        "name": "channel",
+        "description": "Channel to send the message to",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "message",
+        "description": "message to send (use %user% to mention a user not in this channel)",
+        "required": true
+      },
+      {
+        "type": 6,
+        "name": "user",
+        "description": "user to replace %user% with in the message",
+        "required": false
+      }
+    ]
+  }
+}

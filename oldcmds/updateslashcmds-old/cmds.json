@@ -1,0 +1,29 @@
+{
+  "type": "bo-home",
+  "cmd": {
+    "name": "updateslashcmds",
+    "description": "(Bot owner only) Updates Slash Cmds",
+    "options": [
+      {
+        "type" : 3,
+        "name" : "update",
+        "required" : true,
+        "description" : "Which slash commands to update",
+        "choices" : [
+          {
+            "name" : "all",
+            "value" : "all"
+          },
+          {
+            "name" : "global",
+            "value" : "global"
+          },
+          {
+            "name" : "guilds",
+            "value" : "guilds"
+          }
+        ]
+      }
+    ]
+  }
+}

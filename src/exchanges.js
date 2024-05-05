@@ -4,7 +4,7 @@ const log = require('logger')
 const rabbitmq = require('./helpers/rabbitmq')
 
 const { recreateBot } = require('./bot')
-const updateDataList = require('./processCmds/autoComplete/update')
+const updateDataList = require('./helpers/updateDataList')
 
 let POD_NAME = process.env.POD_NAME || 'bot', SET_NAME = process.env.SET_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default'
 let QUE_NAME = `${NAME_SPACE}.${POD_NAME}.topic`

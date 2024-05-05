@@ -1,0 +1,23 @@
+{
+  "type": "private",
+  "cmd": {
+    "name": "roll",
+    "description": "Get a random number",
+    "options": [
+      {
+        "type": 4,
+        "name": "min",
+        "description": "Minimum Number",
+        "default": false,
+        "required": false
+      },
+      {
+        "type": 4,
+        "name": "max",
+        "description": "Maximum Number",
+        "default": false,
+        "required": false
+      }
+    ]
+  }
+}

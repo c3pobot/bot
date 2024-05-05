@@ -1,15 +1,11 @@
 'use strict'
-const { msgOpts } = require('helpers/msgOpts')
-const SendJoin = require('./sendJoin')
-const SendWelcome = require('./sendWelcome')
+const { msgOpts } = require('src/helpers/msgOpts')
+const sendJoin = require('./sendJoin')
+const sendWelcome = require('./sendWelcome')
 module.exports = async(member, bot)=>{
-  try{
-    const info = msgOpts?.member.find(x=>x.sId === member?.guild?.id)
-    if(!info) return;
-    if(info.newMember) SendJoin(member, info.newMember, bot)
-    if(info.welcome?.msg && info.welcome?.chId && info.welcome?.status > 0 && member) SendWelcome(member, info.welcome.chId, info.welcome.msg, bot)
-    if(info.welcomeAlt?.msg && info.welcomeAlt?.chId && info.welcomeAlt?.status > 0 && member) SendWelcome(member, info.welcomeAlt.chId, info.welcomeAlt.msg, bot)
-  }catch(e){
-    throw(e);
-  }
+  let info = msgOpts?.member.find(x=>x.sId === member?.guild?.id)
+  if(!info) return;
+  if(info.newMember) sendJoin(member, info.newMember, bot)
+  if(info.welcome?.msg && info.welcome?.chId && info.welcome?.status > 0 && member) sendWelcome(member, info.welcome.chId, info.welcome.msg, bot)
+  if(info.welcomeAlt?.msg && info.welcomeAlt?.chId && info.welcomeAlt?.status > 0 && member) sendWelcome(member, info.welcomeAlt.chId, info.welcomeAlt.msg, bot)
 }

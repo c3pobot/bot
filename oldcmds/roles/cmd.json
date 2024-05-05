@@ -1,0 +1,7 @@
+{
+  "type": "public",
+  "cmd": {
+    "name": "roles",
+    "description": "Get Server Roles"
+  }
+}

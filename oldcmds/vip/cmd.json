@@ -1,0 +1,110 @@
+{
+  "type": "public",
+  "cmd": {
+    "name" : "vip",
+    "description" : "VIP Commands",
+    "options" : [
+      {
+        "type" : 2,
+        "name" : "cr",
+        "description" : "(VIP only) Manage Custom Reactions",
+        "options" : [
+          {
+            "type": 1,
+            "name" : "add",
+            "description" : "(VIP only) Add personal custom reaction",
+            "options" : [
+              {
+                "type": 3,
+                "name" : "trigger",
+                "description": "trigger word/phrase",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name": "response",
+                "description": "bot response to the reaction",
+                "required": true
+              },
+              {
+                "type": 4,
+                "name": "anywhere",
+                "description": "Show response if trigger is anywhere in the message (default is no)",
+                "choices": [
+                  {
+                    "name": "no",
+                    "value": 0
+                  },
+                  {
+                    "name": "yes",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "list",
+            "description": "(VIP only) List personal custom reactions"
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "(VIP only) Remove personal custom reaction",
+            "options": [
+              {
+                "type": 3,
+                "name": "trigger",
+                "description": "trigger of personal custom reaction to delete"
+              },
+              {
+                "type": 4,
+                "name": "id",
+                "description": "personal custom reaction id"
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "edit",
+            "description": "(VIP only) edit personal custom reactions",
+            "options": [
+              {
+                "type": 4,
+                "name": "id",
+                "description": "id of personal custom reaction",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name" : "trigger",
+                "description": "trigger word/phrase"
+              },
+              {
+                "type": 3,
+                "name": "response",
+                "description": "bot response to the reaction"
+              },
+              {
+                "type": 4,
+                "name": "anywhere",
+                "description": "Show response if trigger is anywhere in the message (default is no)",
+                "choices": [
+                  {
+                    "name": "no",
+                    "value": 0
+                  },
+                  {
+                    "name": "yes",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

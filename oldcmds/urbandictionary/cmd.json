@@ -1,0 +1,16 @@
+{
+  "type": "private",
+  "cmd": {
+    "name": "urbandictionary",
+    "description": "Search urbandictionary.com",
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Search String",
+        "default": false,
+        "required": true
+      }
+    ]
+  }
+}

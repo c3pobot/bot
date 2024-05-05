@@ -1,0 +1,35 @@
+{
+  "type": "bo-home",
+  "cmd": {
+    "name": "whodat",
+    "description": "(Bot owner only) Get info for channel, guild or user",
+    "options": [
+      {
+        "type": 3,
+        "name": "option",
+        "description": "channel, guild or user",
+        "required": true,
+        "choices": [
+          {
+            "name": "channel",
+            "value": "channel"
+          },
+          {
+            "name": "guild",
+            "value": "guild"
+          },
+          {
+            "name": "user",
+            "value": "user"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "id",
+        "description": "ID",
+        "required": true
+      }
+    ]
+  }
+}

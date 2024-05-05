@@ -1,0 +1,14 @@
+{
+  "type": "private",
+  "cmd": {
+    "name": "whois",
+    "description": "Get user info",
+    "options": [{
+      "type": 6,
+      "name": "user",
+      "description": "Discord User",
+      "default": false,
+      "required": false
+    }]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "private",
+  "cmd": {
+    "name": "iamnot",
+    "description": "remove self assign role",
+    "options": [
+      {
+        "type": 8,
+        "name": "role",
+        "description": "self assign role to add"
+      }
+    ] 
+  }
+}

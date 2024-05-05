@@ -1,0 +1,55 @@
+{
+  "type": "bo-public",
+  "cmd": {
+    "name": "server",
+    "description": "(Bot owner only) Manage Bot servers",
+    "options": [
+      {
+        "type": 3,
+        "name": "action",
+        "description": "add, remove, list",
+        "required": true,
+        "choices": [
+          {
+            "name": "list",
+            "value": "list"
+          },
+          {
+            "name": "add",
+            "value": "add"
+          },
+          {
+            "name": "remove",
+            "value": "remove"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "option",
+        "description": "all, private, basic",
+        "required": true,
+        "choices": [
+          {
+            "name": "all",
+            "value": "all"
+          },
+          {
+            "name": "basic",
+            "value": "basic"
+          },
+          {
+            "name": "private",
+            "value": "private"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "id",
+        "description": "ID",
+        "required": false
+      }
+    ]
+  }
+}

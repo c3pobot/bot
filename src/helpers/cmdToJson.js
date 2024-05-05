@@ -1,29 +1,111 @@
 'use strict'
-module.exports = (obj = {})=>{
-  let data = {
-    id: obj.id,
-    app_permissions: obj.appPermissions,
-    application_id: obj.applicationId,
-    channel: obj.channel?.toJSON(),
-    channel_id: obj.channel?.id,
-    data: {
-      id: obj.commandId,
-      name: obj.commandName,
-      options: obj.options?.data,
-      resolved: {
-        members: obj.options?.resolved?.members?.reduce((a,v) =>({...a, [v.userId]:v}), {}),
-        users: obj.options?.resolved?.users?.reduce((a,v) =>({...a, [v.id]:v}), {}),
-        roles: obj.options?.resolved?.roles?.reduce((a,v) =>({...a, [v.id]:v}), {})
-      },
-      type: obj.commandType
-    },
-    guild: obj.guild?.toJSON(),
-    guild_id: obj.guild?.id,
-    member: obj.member?.toJSON(),
-    token: obj.token,
-    type: obj.type,
-    version: obj.version,
-    message: obj.message?.toJSON()
+const log = require('logger')
+const { getChannelObj, getMemberObj, getResolvedObj } = require('./getCmdObjects')
+
+const getUsers = (obj, resolved)=>{
+  if(!obj.value || !resolved.members || !resolved.users) return
+  return getMemberObj(resolved.users.get(obj.value)?.toJSON(), resolved.members.get(obj.value)?.toJSON())
+}
+const getRoles = (obj, resolved = {})=>{
+  return obj?.role
+}
+const getChannels = (obj, resolved = {})=>{
+  return getChannelObj(obj?.channel)
+}
+const typeEnum = {
+  6: getUsers,
+  8: getRoles,
+  7: getChannels
+}
+const getResolvedData = (obj, resolved = {})=>{
+  if(!obj.type || !obj.value) return
+  if(typeEnum[obj.type]) return typeEnum[obj.type](obj, resolved)
+}
+const getOptions = (array = [], obj = { options: {} }, resolved = {})=>{
+  if(!array || array?.length == 0) return
+  for(let i in array){
+    if(array[i].type === 2) obj.subCmdGroup = array[i].name
+    if(array[i].type === 1) obj.subCmd = array[i].name
+    if(array[i].type > 2){
+      obj.options[array[i].name] = { name: array[i].name, value: array[i].value, data: getResolvedData(array[i], resolved) }
+    }
+    if(array[i].options) getOptions(array[i].options, obj, resolved)
   }
-  return data
+}
+const getPreviousCmd = (obj, data = {})=>{
+  if(!obj) return
+  data.previousId = obj.id
+  let oldCmd = obj.commandName?.split(' ')
+  if(!oldCmd) return
+  data.cmd = oldCmd[0]
+  data.subCmd = oldCmd[2]
+  if(data.subCmd){
+    data.subCmdGroup = oldCmd[1]
+  }else{
+    data.subCmd = oldCmd[1]
+  }
+}
+const getMsg = async(channel, msg)=>{
+  return await channel?.messages?.fetch(msg?.reference?.messageId)
+}
+const getOldInteraction = async(channel, msg)=>{
+  let res = msg?.interaction
+  if(!res && msg.reference){
+    let oldMsg = await getMsg(channel, msg)
+    if(oldMsg) return await getOldInteraction(channel, oldMsg)
+  }
+  return res
+}
+
+module.exports = (obj = {})=>{
+  try{
+    let tempOptions = { options: {} }
+    let guildOwner = obj.guild.members?.cache?.get(obj.guild?.ownerId)
+    getOptions(obj.options?.data, tempOptions, obj.options?.resolved)
+    let data = {
+      id: obj.id,
+      app_permissions: obj.appPermissions,
+      application_id: obj.applicationId,
+      cmd: obj.commandName,
+      subCmd: tempOptions.subCmd,
+      subCmdGroup: tempOptions.subCmdGroup,
+      channel: getChannelObj(obj.channel),
+      channel_id: obj.channel?.id,
+      data: {
+        id: obj.commandId,
+        name: obj.commandName,
+        type: obj.commandType,
+        guild_id: obj.guild?.id,
+        options: tempOptions.options,
+        resolved: getResolvedObj(obj.options?.resolved),
+      },
+      guild: {
+        id: obj.guild?.id,
+        name: obj.guild?.name,
+        shard_id: obj.guild?.shardId,
+        owner_id: obj.guild?.ownerId,
+        icon_url: obj.guild?.iconURL,
+        owner_name: guildOwner?.nickname || guildOwner?.user?.username
+      },
+      guild_id: obj.guild?.id,
+      member: getMemberObj(obj.user?.toJSON(), obj.member?.toJSON()),
+      token: obj.token,
+      type: obj.type,
+      version: obj.version,
+      created_timestamp: obj.createdTimestamp,
+      timestamp: obj.createdTimestamp,
+      selectValues: obj.values || [],
+      message: obj.message?.toJSON()
+    }
+    if(obj.customId){
+      data.confirm = JSON.parse(obj.customId)
+      if(!data.confirm?.id) getPreviousCmd(obj.message?.interaction, data)
+    }
+    if(data?.data?.options?.channel){
+      data.data.options.channel.botPerms = obj.guild?.channels?.cache?.get(data.data.options.channel.value)?.permissionsFor(obj.client?.user)
+    }
+    return data
+  }catch(e){
+    log.error(e)
+  }
 }

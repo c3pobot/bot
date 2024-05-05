@@ -7,6 +7,7 @@ const mongo = require('mongoclient');
 
 const { startBot } = require('./bot')
 const cmdQue = require('./cmdQue')
+const saveSlashCmds = require('./saveSlashCmds')
 const rabbitmq = require('./helpers/rabbitmq')
 const fetch = require('./fetch')
 
@@ -46,6 +47,7 @@ const checkMongo = async()=>{
     log.debug(`${POD_NAME} checking mongo status...`)
     let status = mongo.status()
     if(status){
+      if(POD_NAME?.toString().endsWith("0")) saveSlashCmds('/app/src/cmds', 'bot')
       startCmdQue()
       return
     }

@@ -1,31 +1,42 @@
 'use strict'
 const log = require('logger')
-const getMsg = require('./getMsg')
-
-const POD_NAME = process.env.POD_NAME
+const reportBotError = require('src/helpers/reportBotError')
+const perms = ['ManageMessages', 'SendMessages', 'ViewChannel']
+const checkBlackList = require('src/helpers/checkBlackList')
 
 module.exports = async(obj = {}, bot)=>{
   try{
+    if(!obj.msg && obj.content) obj.msg = { content: obj.content }
+    if(!obj.msgId || !obj.chId || !obj.msg) return
+    let blackListed = await checkBlackList(obj.chId)
+    if(blackListed){
+      log.debug(`channel ${obj.chId} is blackListed`)
+      return
+    }
+    blackListed = await checkBlackList(obj.msgId)
+    if(blackListed){
+      log.debug(`messaage ${obj.msgId} is blackListed`)
+      return
+    }
 
-    if(!obj.msgId || !obj.chId || (!obj.content && !obj.msg)) return
-    if(obj.content && !obj.msg){
-      obj.msg = obj.content
-      if(typeof obj.msg != 'object' && typeof obj.msg == 'string') obj.msg = {content: obj.msg}
+    let channel = bot?.channels?.cache?.get(obj.chId)
+    if(!channel) channel = await bot?.channels?.fetch(obj.chId)
+    if(!channel) throw(`error getting ch ${obj.chId}`)
+
+    let hasPerm = true
+    for(let i in perms){
+      if(!hasPerm) break;
+      hasPerm = channel.permissionsFor(channel.guild?.members?.me)?.has(perms[i])
+      if(!hasPerm) throw(`missing ${perms[i]} for ch ${obj.chId}`)
     }
-    let msg = await getMsg(obj, bot)
-    if(!msg) return { status: 'error', msg: 'Error getting message '+obj.msgId }
-    if(obj.file || obj.files){
-      obj.msg.files = []
-      if(obj.file) obj.msg.files.push({attachment: Buffer.from(obj.file, 'base64'), name: obj.filename})
-      if(obj.files){
-        for(let i in obj.files) obj.msg.files.push({attachment: Buffer.from(obj.files[i].file, 'base64'), name: obj.files[i].filename})
-      }
-      delete obj.file
-      delete obj.files
-    }
+    if(!hasPerm) return
+
+    let msg = channel.messages?.cache?.get(obj.msgId)
+    if(!msg) msg = await channel.messages?.fetch(obj.msgId)
+    if(!msg) throw(`error getting msg ${obj.msgId} in ch ${obj.chId}`)
+
     return await msg.edit(obj.msg)
   }catch(e){
-    log.error(`pod: ${POD_NAME}, method: editMsg, sId: ${obj.sId}, chId : ${obj.chId}, msgId : ${obj.msgId}`)
-    throw(e)
+    reportBotError(obj, e)
   }
 }

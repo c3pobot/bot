@@ -1,0 +1,40 @@
+{
+  "type": "private",
+  "cmd": {
+    "name": "self-assign",
+    "description": "manage self assign roles",
+    "options": [
+      {
+        "type": 1,
+        "name": "add",
+        "description": "(requires bot admin) add self assign role for the server",
+        "options": [
+          {
+            "type": 8,
+            "name": "role",
+            "description": "role to add as self assign role",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "description": "(requires bot admin) remove self assign role from the server",
+        "options": [
+          {
+            "type": 8,
+            "name": "role",
+            "description": "role to add as self assign role",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "show",
+        "description": "Show server self assign roles"
+      }
+    ]
+  }
+}

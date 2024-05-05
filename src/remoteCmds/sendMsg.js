@@ -1,20 +1,31 @@
-'use strict'
 const log = require('logger')
-const getChannel = require('./getChannel')
-
-const POD_NAME = process.env.POD_NAME
+const perms = ['SendMessages', 'ViewChannel']
+const reportBotError = require('src/helpers/reportBotError')
+const checkBlackList = require('src/helpers/checkBlackList')
 
 module.exports = async(obj = {}, bot)=>{
   try{
-    if(!obj.chId || (!obj.content && !obj.msg)) return
-    let res = {status: 'error'}
-    let channel = await getChannel(obj, bot)
-    if(!channel){
-      return {status: 'error', msg: 'Error getting channel '+obj.chId}
+    if(!obj.msg || !obj.chId) return
+    let blackListed = await checkBlackList(obj.dId)
+    if(blackListed){
+      log.debug(`channel ${obj.chId} is blackListed`)
+      return
     }
-    return await channel.send(obj.msg || obj.content)
+
+    let channel = bot?.channels?.cache?.get(obj.chId)
+    if(!channel) channel = await bot?.channels?.fetch(obj.chId)
+    if(!channel) throw(`error getting channel`)
+
+    let hasPerm = true
+    for(let i in perms){
+      if(!hasPerm) break;
+      hasPerm = channel.permissionsFor(channel.guild?.members?.me)?.has(perms[i])
+      if(!hasPerm) throw(`missing ${perms[i]} permission`)
+    }
+    if(!hasPerm) return
+
+    return await channel.send(obj.msg)
   }catch(e){
-    log.error(`pod: ${POD_NAME}, method: sendMsg, sId: ${obj.sId}, chId : ${obj.chId}`)
-    throw(e);
+    reportBotError(obj, e)
   }
 }

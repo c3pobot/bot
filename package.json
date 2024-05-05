@@ -9,9 +9,15 @@
     "build": "chmod a+x buildtestimage.sh && ./buildtestimage.sh c3pobot/bot",
     "prod": "chmod a+x buildprodimage.sh && ./buildprodimage.sh c3pobot/bot"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "/app/src/.cmds*"
+    ]
+  },
   "author": "scuba75",
   "license": "ISC",
   "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.0",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "discord.js": "^14.14.1",
@@ -21,6 +27,8 @@
     "mongoclient": "github:c3pobot/mongoclient",
     "node-fetch": "^2.6.12",
     "rabbitmq-client": "^4.5.3",
-    "redisclient": "github:c3pobot/redisclient"
+    "redisclient": "github:c3pobot/redisclient",
+    "shyriiwook": "^1.0.0",
+    "uuid": "^9.0.1"
   }
 }
