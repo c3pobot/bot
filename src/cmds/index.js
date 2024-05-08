@@ -1,8 +1,8 @@
 'use strict'
 const log = require('logger')
-const redis = require('redisclient')
 const replyMsg = require('src/helpers/replyMsg')
 const replyError = require('src/helpers/replyError')
+
 const Cmds = {}
 Cmds.avatar = require('./avatar')
 Cmds.emotes = require('./emotes')

@@ -64,7 +64,7 @@ const handleCmdRequest = async(req, res)=>{
 const startBot = async( data )=>{
   if(data?.numShards >= 0) NUM_SHARDS = data.numShards
   if(!POD_NAME) throw('POD_NAME not supplied...')
-  if(SHARD_NUM >= 0 && NUM_SHARDS && BOT_TOKEN){
+  if(SHARD_NUM >= 0 && NUM_SHARDS && BOT_TOKEN && NUM_SHARDS > SHARD_NUM){
     createBot()
     return true
   }
@@ -128,7 +128,7 @@ const createBot = ()=>{
   test()
 }
 const recreateBot = async()=>{
-  if(NUM_SHARDS > 0){
+  if(NUM_SHARDS >= 0){
     if(bot){
       await bot?.destroy()
       bot = null

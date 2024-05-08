@@ -32,6 +32,10 @@ const getOptions = (array = [], obj = { options: {} }, resolved = {})=>{
     if(array[i].options) getOptions(array[i].options, obj, resolved)
   }
 }
+const getModalOptions = (array = [], obj = { options: {} })=>{
+  if(!array || array?.length == 0) return
+  for(let i in array) obj.options[array[i].customId] = array[i].value
+}
 const getPreviousCmd = (obj, data = {})=>{
   if(!obj) return
   data.previousId = obj.id
@@ -62,6 +66,7 @@ module.exports = (obj = {})=>{
     let tempOptions = { options: {} }
     let guildOwner = obj.guild.members?.cache?.get(obj.guild?.ownerId)
     getOptions(obj.options?.data, tempOptions, obj.options?.resolved)
+    if(obj.fields?.fields && obj.type === 5) getModalOptions(obj.fields.fields.toJSON(), tempOptions)
     let data = {
       id: obj.id,
       app_permissions: obj.appPermissions,
@@ -95,6 +100,7 @@ module.exports = (obj = {})=>{
       created_timestamp: obj.createdTimestamp,
       timestamp: obj.createdTimestamp,
       selectValues: obj.values || [],
+      modalFields: obj.fields,
       message: obj.message?.toJSON()
     }
     if(obj.customId){

@@ -2,7 +2,6 @@
 const log = require('logger');
 log.setLevel('debug');
 const { Client, GatewayIntentBits } = require('discord.js');
-const redis = require('redisclient');
 const mongo = require('mongoclient');
 
 const { startBot } = require('./bot')
@@ -10,7 +9,7 @@ const cmdQue = require('./cmdQue')
 const saveSlashCmds = require('./saveSlashCmds')
 const rabbitmq = require('./helpers/rabbitmq')
 const fetch = require('./fetch')
-
+const botMonitor = require('./monitor')
 
 const POD_NAME = process.env.POD_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default', SET_NAME = process.env.SET_NAME || 'bot'
 let NODE_MONITOR_URL = process.env.NODE_MONITOR_URL || 'http://node-monitor.monitor:3000'
@@ -19,27 +18,13 @@ const checkRabbitmq = ()=>{
   try{
     log.debug(`${POD_NAME} checking rabbitmq status...`)
     if(rabbitmq?.ready){
-      checkRedis()
-      return
-    }
-    setTimeout(checkRabbitmq, 5000)
-  }catch(e){
-    log.error(e)
-    setTimeout(checkRabbitmq, 5000)
-  }
-}
-const checkRedis = ()=>{
-  try{
-    log.debug(`${POD_NAME} checking redis status...`)
-    let status = redis.status()
-    if(status){
       checkMongo()
       return
     }
-    setTimeout(checkRedis, 5000)
+    setTimeout(checkRabbitmq, 5000)
   }catch(e){
     log.error(e)
-    setTimeout(checkRedis, 5000)
+    setTimeout(checkRabbitmq, 5000)
   }
 }
 const checkMongo = async()=>{
@@ -74,9 +59,9 @@ const startCmdQue = () => {
 const getReplicaCount = async()=>{
   try{
     log.debug(`${POD_NAME} checking replica status...`)
-    let data = await fetch(`${NODE_MONITOR_URL}/replicas/stateful/${NAME_SPACE}/${SET_NAME}`, null, 'GET')
-    if(data?.replicas){
-      startBot({ numShards: +data.replicas })
+    let numShards = botMonitor.getNumShards()
+    if(numShards > 0){
+      startBot({ numShards: numShards })
       require('./exchanges')
       return
     }

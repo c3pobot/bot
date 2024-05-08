@@ -1,6 +1,5 @@
 'use strict'
 const mongo = require('mongoclient')
-const redis = require('redisclient')
 const getPotPerms = require('src/helpers/getBotPerms')
 const showListOfRoles = require('./showListOfRoles')
 const { checkIsUser, getBotPerms, replyButton } = require('src/helpers')

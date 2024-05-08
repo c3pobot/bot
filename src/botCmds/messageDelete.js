@@ -3,7 +3,7 @@ const { msgOpts } = require('src/helpers/msgOpts')
 module.exports = async(msg, bot)=>{
   if(!msg || !bot || !msg.guild || msg.author.bot) return;
 
-  let info = msgOpts?.message?.find(x=>x.sId === msg?.guild?.id)
+  let info = msgOpts?.message?.get(msg?.guild?.id)
   if(!info?.msgDelete) return;
 
   let channel = await bot?.channels?.fetch(info.msgDelete)

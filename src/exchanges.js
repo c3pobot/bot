@@ -1,5 +1,5 @@
 'use strict'
-const mongo = require('mongoapiclient')
+const mongo = require('mongoclient')
 const log = require('logger')
 const rabbitmq = require('./helpers/rabbitmq')
 
@@ -8,8 +8,8 @@ const updateDataList = require('./helpers/updateDataList')
 
 let POD_NAME = process.env.POD_NAME || 'bot', SET_NAME = process.env.SET_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default'
 let QUE_NAME = `${NAME_SPACE}.${POD_NAME}.topic`
-let SET_EXCHANGE = process.env.BOT_SET_EXCHANGE || 'k8-status', DATA_EXCHANGE_NAME = process.env.GAME_DATA_EXCHANGE || `game-data`
-let SET_ROUTING_KEY = process.env.BOT_SET_TOPIC || `statefulset.default.bot`, DATA_ROUTING_KEY = process.env.GAME_DATA_TOPIC || `default.data-sync.game-data`
+let SET_EXCHANGE = process.env.BOT_SET_EXCHANGE || 'k8-status', DATA_EXCHANGE_NAME = process.env.GAME_DATA_EXCHANGE || `data-sync`
+let SET_ROUTING_KEY = process.env.BOT_SET_TOPIC || `statefulset.${NAME_SPACE}.${SET_NAME}`, DATA_ROUTING_KEY = process.env.GAME_DATA_TOPIC || `${NAME_SPACE}.${DATA_EXCHANGE_NAME}.game-data`
 
 let exchanges = [{ exchange: SET_EXCHANGE, durable: true, type: 'topic'}, { exchange: DATA_EXCHANGE_NAME, durable: true, type: 'topic'}]
 let queueBindings = [{ exchange: SET_EXCHANGE, routingKey: SET_ROUTING_KEY, queue: QUE_NAME }, { exchange: DATA_EXCHANGE_NAME, routingKey: DATA_ROUTING_KEY, queue: QUE_NAME }]

@@ -9,7 +9,7 @@ const truncateStr = (str, num)=>{
 }
 module.exports = async(obj = {}, bot)=>{
   if(!obj.newMsg || !obj.oldMsg || obj.newMsg?.author?.bot || !obj.newMsg?.guild) return;
-  let info = msgOpts.message?.find(x=>x.sId === obj.newMsg?.guild?.id)
+  let info = msgOpts.message?.get(obj.newMsg?.guild?.id)
   if(!info?.msgEdit) return;
   if(!bot) return
   let channel = await bot.channels.fetch(info.msgEdit)

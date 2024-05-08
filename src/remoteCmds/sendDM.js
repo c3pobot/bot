@@ -6,8 +6,9 @@ const perms = ['SendMessages', 'ViewChannel']
 
 module.exports = async(obj = {}, bot)=>{
   try{
+
     if(!obj.msg && obj.content) obj.msg = { content: obj.content }
-    if(!obj.dId || obj.msg || !obj?.sId || !bot) return
+    if(!obj.dId || !obj.msg || !obj?.sId || !bot) return
     let blackListed = await checkBlackList(obj.dId)
     if(blackListed){
       log.debug(`user ${obj.dId} is blackListed`)

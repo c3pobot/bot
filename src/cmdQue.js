@@ -3,10 +3,10 @@ const log = require('logger')
 const rabbitmq = require('./helpers/rabbitmq')
 const { msgOpts } = require('./helpers/msgOpts')
 
-let WORKER_QUE_NAME_SPACE = process.env.WORKER_QUE_NAME_SPACE || 'default'
+let WORKER_QUE_NAME_SPACE = process.env.WORKER_QUE_NAME_SPACE || process.env.NAME_SPACE || 'default'
 let queues = [ 'swgoh', 'discord', 'oauth'], publisher, publisherReady
 if(process.env.WORKER_QUES) queues = JSON.parse(process.env.WORKER_QUES)
-const PRIVATE_QUES = process.env.PRIVATE_QUES || false, POD_NAME = process.env.POD_NAME || 'bot'
+let PRIVATE_QUES = process.env.PRIVATE_QUES || false, POD_NAME = process.env.POD_NAME || 'bot'
 
 module.exports.start = ()=>{
   let payload = { confirm: true, queues: [] }
@@ -21,7 +21,7 @@ module.exports.start = ()=>{
 module.exports.add = async(queName, data = {})=>{
   if(!publisher) return
   let key = `${WORKER_QUE_NAME_SPACE}.worker.${queName}`
-  if(PRIVATE_QUES && msgOpts?.private?.filter(x=>x === data.guild_id).length > 0) routingKey += '.private'
+  if(PRIVATE_QUES && msgOpts?.private?.has(data.guild_id)) routingKey += '.private'
   await publisher.send(key, data)
   return true
 }

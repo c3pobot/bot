@@ -1,7 +1,7 @@
 'use strict'
 const { msgOpts } = require('src/helpers/msgOpts')
 module.exports = async(member, bot)=>{
-  let info = msgOpts.member.find(x=>x.sId === member?.guild?.id)
+  let info = msgOpts?.member?.get(member?.guild?.id)
   if(!info?.memberLeave || !bot) return;
 
   let channel = await bot.channels.fetch(info.memberLeave)
