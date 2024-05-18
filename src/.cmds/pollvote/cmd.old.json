@@ -1,6 +1,7 @@
 {
   "type": "private",
   "hidden": true,
+  "worker": "bot",
   "cmd": {
     "name": "pollvote"
   }

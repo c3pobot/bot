@@ -1,5 +1,6 @@
 {
   "type": "public",
+  "worker": "bot",
   "cmd": {
     "name": "roles",
     "description": "Get Server Roles"

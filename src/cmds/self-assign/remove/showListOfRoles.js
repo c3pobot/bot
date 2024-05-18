@@ -10,7 +10,7 @@ module.exports = (obj, roles = [])=>{
         type: 2,
           label: role?.name || roles[i].name,
           style: 1,
-          custom_id: JSON.stringify({cmd: 'self-assign', subCmd: 'remove', roleId: roles[i].id})
+          custom_id: JSON.stringify({cmd: 'self-assign', subCmd: 'remove', dId: obj?.user?.id, roleId: roles[i].id})
       })
       if(+tempRow.components.length === 5 && +components.length < 6){
         components.push(tempRow)

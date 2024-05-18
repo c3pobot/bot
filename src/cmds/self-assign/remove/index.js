@@ -4,12 +4,6 @@ const showListOfRoles = require('./showListOfRoles')
 const { checkIsUser, getBotPerms, replyButton } = require('src/helpers')
 
 module.exports = async(obj, opt = {})=>{
-  if(obj.customId){
-    let auth = checkIsUser(obj)
-    if(!auth) return
-    await replyButton(obj)
-  }
-
   let roleId = opt.roleId || obj.options?.get('role')?.value
   let server = (await mongo.find('discordServer', { _id: obj.guildId }, { selfassignroles: 1 }))[0]
   if(!server?.selfassignroles || server?.selfassignroles?.length == 0) return { content: 'There are not self assign roles..', components: [] }

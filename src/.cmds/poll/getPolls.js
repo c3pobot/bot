@@ -18,7 +18,7 @@ module.exports = (obj, opt = {}, polls = [], subCmd = 'stats')=>{
       type: 2,
       label: truncateString(polls[i].question, 75),
       style: (polls[i].status ? 3:4),
-      custom_id: JSON.stringify({cmd: 'poll', subCmd: subCmd, pollId: polls[i]._id})
+      custom_id: JSON.stringify({cmd: 'poll', subCmd: subCmd, dId: obj?.user?.id, pollId: polls[i]._id})
     })
     if(msg2send.components[x].components.length == 5 && msg2send.components.length < 5) x++;
   }

@@ -1,5 +1,6 @@
 {
   "type": "private",
+  "worker": "bot",
   "cmd": {
     "name": "roll",
     "description": "Get a random number",

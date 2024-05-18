@@ -3,10 +3,9 @@ const mongo = require('mongoclient')
 const showListOfRoles = require('./showListOfRoles')
 const { checkIsUser, getBotPerms, replyButton } = require('src/helpers')
 
-module.exports = async(obj, opt = {})=>{
+module.exports = async(obj)=>{
   let botPerms = getBotPerms(obj)
   if(!botPerms || botPerms?.length == 0) return { content: 'Error getting permissions for the bot...'}
-
   if(botPerms?.filter(x=>x === 'ManageRoles').length == 0) return { content: 'The bot does not have permission to assign roles to members...' }
 
   let roleId = opt.roleId || obj?.options?.get('role')?.value
@@ -21,6 +20,6 @@ module.exports = async(obj, opt = {})=>{
 
   if(server?.selfassignroles?.filter(x=>x.id === roleId).length == 0) return { content: `\`@${role.name}\` is not a self assign role...`}
 
-  obj.member?.roles?.add(roleId)
-  return { content: `You have been assigned the \`@${role.name}\` role...`, components: [] }
+  obj.member?.roles?.remove(roleId)
+  return { content: `You have been removed from the \`@${role.name}\` role...`, components: [] }
 }

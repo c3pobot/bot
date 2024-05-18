@@ -6,9 +6,13 @@ const replyError = require('src/helpers/replyError')
 const Cmds = {}
 Cmds.avatar = require('./avatar')
 Cmds.emotes = require('./emotes')
+Cmds.gif = require('./gif')
 Cmds.iam = require('./iam')
-Cmds.poll = require('./poll')
+Cmds.iamnot = require('./iamnot')
+Cmds.roles = require('./roles')
+Cmds.roll = require('./roll')
 Cmds['self-assign'] = require('./self-assign')
+Cmds.whois = require('./whois')
 
 const callCommand = async(command, obj, opt = {})=>{
   try{
@@ -34,8 +38,10 @@ module.exports.sendCmd = async(command, obj, opt = {})=>{
       return
     }
     if(obj.isButton()) await obj.deferUpdate()
+    if(opt.dId && opt.dId !== obj?.user?.id) return
     if(obj.isCommand()) await obj.reply({ content: 'Here we go again...' })
     if(obj.isStringSelectMenu()) await obj.deferUpdate()
+
     callCommand(command, obj, opt)
   }catch(e){
     log.error(e)

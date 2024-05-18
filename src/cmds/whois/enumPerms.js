@@ -1,0 +1,25 @@
+'use strict'
+module.exports = {
+  ADMINISTRATOR: 'Administrator',
+  Administrator: 'Administrator',
+  ADD_REACTIONS: 'Manage Emojis',
+  AddReactions: 'Manage Emojis',
+  BAN_MEMBERS: 'Ban Members',
+  BanMembers: 'Ban Members',
+  KICK_MEMBERS: 'Kick Members',
+  KickMembers: 'Kick Members',
+  MANAGE_CHANNELS: 'Manage Channels',
+  ManageChannels: 'Manage Channels',
+  MANAGE_GUILD: 'Manage Server',
+  ManageGuild: 'Manage Guild',
+  MANAGE_MESSAGES: 'Manage Messages',
+  ManageMessages: 'Manage Messages',
+  MANAGE_ROLES: 'Manage Roles',
+  ManageRoles: 'Manage Roles',
+  MANAGE_WEBHOOKS: 'Manage Webhooks',
+  ManageWebhooks: 'Manage Webhooks',
+  MANAGE_NICKNAMES: 'Manage Nicknames',
+  ManageNicknames: 'Manage Nicknames',
+  MENTION_EVERYONE: 'Mention Everyone',
+  MentionEveryone: 'Mention Everyone'
+}

@@ -1,5 +1,6 @@
 {
   "type": "private",
+  "worker": "bot",
   "cmd": {
     "name": "gif",
     "description": "Get Gif from giphy",

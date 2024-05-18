@@ -1,5 +1,6 @@
 {
-  "type": "private",
+  "type": "public",
+  "worker": "bot",
   "cmd": {
     "name": "whois",
     "description": "Get user info",
