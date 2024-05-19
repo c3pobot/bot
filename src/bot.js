@@ -9,26 +9,7 @@ const processCmds = require('./processCmds');
 
 const BOT_TOKEN = process.env.BOT_TOKEN, POD_NAME = process.env.POD_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default', SET_NAME = process.env.SET_NAME || 'bot', PORT = process.env.PORT || 3000
 let SHARD_NUM = +POD_NAME?.replace(`${SET_NAME}-`, ''), NUM_SHARDS = 0, BOT_READY, bot
-const test = async()=>{
-  try{
-    return
-    if(BOT_READY){
-      log.info('testing DM')
-      let obj = { cmd: 'dm', dId: '215285469003382784', msg : { content: 'hello there'}, sId: '799831386865401878' }
-      /*
-      let dId = "1026235151363092528"
-      let channel = await bot.channels.fetch(chId)
-      if(!channel) throw(`test error getting channel`)
-      log.info(channel.permissionsFor(channel.guild?.members?.me)?.has('SendMessages'))
-      log.info(channel.permissionsFor(channel.guild?.members?.me)?.has('ViewChannel'))
-      */
-    }
-    setTimeout(test, 5000)
-  }catch(e){
-    setTimeout(test, 5000)
-    log.error(e?.message)
-  }
-}
+
 const server = app.listen(PORT, ()=>{
   log.info(`${POD_NAME} is listening on port ${server.address().port}`)
 })
@@ -44,7 +25,7 @@ const handleCmdRequest = async(req, res)=>{
       res.sendStatus(400)
       return
     }
-    if(!req?.body || req?.body?.podName !== POD_NAME || !req?.body?.cmd || !remoteCmds[req?.body?.cmd] || !bot?.isReady()){
+    if(!req?.body || req?.body?.podName !== POD_NAME || !req?.body?.cmd || !remoteCmds[req?.body?.cmd] || !BOT_READY){
       res.sendStatus(400)
       return
     }
@@ -125,11 +106,11 @@ const createBot = ()=>{
     log.error(err)
   })
   bot.login(BOT_TOKEN)
-  test()
 }
 const recreateBot = async()=>{
   if(NUM_SHARDS >= 0){
     if(bot){
+      BOT_READY = false
       await bot?.destroy()
       bot = null
     }
