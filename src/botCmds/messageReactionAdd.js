@@ -12,5 +12,5 @@ module.exports = async(obj = {}, bot)=>{
 
   let auth = checkBasicAllowed(msg)
   if(!auth) return;
-  translate(msg, obj.reaction?.emoji?.name)
+  //translate(msg, obj.reaction?.emoji?.name)
 }
