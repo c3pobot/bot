@@ -26,11 +26,11 @@ module.exports = async(obj = {}, bot)=>{
     }else{
       member = bot.users?.cache?.get(obj.dId)
       if(!member) member = bot.users?.fetch(obj.dId)
-    }    
+    }
 
     if(!member) throw(`error getting member`)
 
-    return await member.send(obj.msg)
+    return await member?.send(obj.msg)
   }catch(e){
     reportBotError(obj, e)
   }

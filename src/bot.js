@@ -44,7 +44,7 @@ const handleCmdRequest = async(req, res)=>{
       res.sendStatus(400)
       return
     }
-    if(!req?.body || req?.body?.podName !== POD_NAME || !req?.body?.cmd || !remoteCmds[req?.body?.cmd]){
+    if(!req?.body || req?.body?.podName !== POD_NAME || !req?.body?.cmd || !remoteCmds[req?.body?.cmd] || !bot?.isReady()){
       res.sendStatus(400)
       return
     }
