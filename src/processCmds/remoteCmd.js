@@ -23,14 +23,15 @@ module.exports = async(interaction)=>{
     }
     //await interaction.reply({ content: 'Here we go again...', components: [] })
     if(interaction.type > 2) await interaction.deferUpdate()
-    if(interaction.type == 2) await interaction.deferReply()
-    await interaction.editReply({ content: 'Here we go again...', components: [] })
+    //if(interaction.type == 2) await interaction.deferReply()
+    if(interaction.type == 2) await interaction.reply({ content: 'Here we go again...', components: [] })
     let cmdData = cmdToJson(interaction)
     if(!cmdData?.id){
       await interaction.editReply({ content: 'Oh dear! error getting command data...', components: [] })
       return
     }
     if(interaction.type > 2 && cmdData.confirm?.dId && cmdData.confirm?.dId !== interaction.member?.user?.id) return
+    if(interaction.type > 2) await interaction.editReply({ content: 'Here we go again...', components: [] })
     if(cmdData.type > 2 && cmdData.confirm?.id){
       await getCmdOptions(cmdData)
       if(!cmdData.cmd){
