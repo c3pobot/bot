@@ -4,7 +4,7 @@ const rabbitmq = require('./helpers/rabbitmq')
 const { msgOpts } = require('./helpers/msgOpts')
 
 let WORKER_QUE_NAME_SPACE = process.env.WORKER_QUE_NAME_SPACE || process.env.NAME_SPACE || 'default'
-let queues = [ 'swgoh', 'discord', 'oauth'], publisher, publisherReady
+let queues = [ 'swgoh', 'discord', 'oauth', 'tw-guild'], publisher, publisherReady
 if(process.env.WORKER_QUES) queues = JSON.parse(process.env.WORKER_QUES)
 let PRIVATE_QUES = process.env.PRIVATE_QUES || false, POD_NAME = process.env.POD_NAME || 'bot'
 

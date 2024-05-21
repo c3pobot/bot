@@ -1,7 +1,7 @@
 'use strict'
 const mongo = require('mongoclient')
 const log = require('logger')
-let workerTypes = ['discord', 'oauth', 'swgoh']
+let workerTypes = ['discord', 'oauth', 'swgoh', 'tw-guild']
 if(process.env.WORKER_TYPES) workerTypes = JSON.parse(process.env.WORKER_TYPES)
 
 let cmdMap = {}

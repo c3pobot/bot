@@ -52,14 +52,6 @@ const getPreviousCmd = (obj, data = {})=>{
 const getMsg = async(channel, msg)=>{
   return await channel?.messages?.fetch(msg?.reference?.messageId)
 }
-const getOldInteraction = async(channel, msg)=>{
-  let res = msg?.interaction
-  if(!res && msg.reference){
-    let oldMsg = await getMsg(channel, msg)
-    if(oldMsg) return await getOldInteraction(channel, oldMsg)
-  }
-  return res
-}
 
 module.exports = (obj = {})=>{
   try{
