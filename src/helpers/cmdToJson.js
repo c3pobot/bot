@@ -102,6 +102,7 @@ module.exports = (obj = {})=>{
     if(data?.data?.options?.channel){
       data.data.options.channel.botPerms = obj.guild?.channels?.cache?.get(data.data.options.channel.value)?.permissionsFor(obj.client?.user)
     }
+    data.cmd = data.confirm?.cmd || obj.commandName
     return data
   }catch(e){
     log.error(e)

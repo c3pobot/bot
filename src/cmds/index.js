@@ -12,6 +12,8 @@ Cmds.iamnot = require('./iamnot')
 Cmds.roles = require('./roles')
 Cmds.roll = require('./roll')
 Cmds['self-assign'] = require('./self-assign')
+Cmds['unit-vote'] = require('./unit-vote')
+Cmds['unit-approve'] = require('./unit-approve')
 Cmds.whois = require('./whois')
 
 const callCommand = async(command, obj, opt = {})=>{

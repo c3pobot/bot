@@ -1,0 +1,8 @@
+{
+  "type": "public",
+  "worker": "bot",
+  "hidden": true,
+  "cmd": {
+    "name": "unit-vote"
+  }
+}
