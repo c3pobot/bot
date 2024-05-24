@@ -1,6 +1,6 @@
 'use strict'
 const log = require('logger');
-log.setLevel('debug');
+
 const { Client, GatewayIntentBits } = require('discord.js');
 const mongo = require('mongoclient');
 
