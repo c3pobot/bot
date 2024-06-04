@@ -2,7 +2,7 @@
 const log = require('logger')
 const mongo = require('mongoclient')
 const { dataList } = require('./dataList')
-
+let notify = false
 const updateNameKeys = async()=>{
   let obj = (await mongo.find('autoComplete', {_id: 'nameKeys'}))[0]
   if(obj?.data) dataList.nameKeys = obj.data
@@ -40,5 +40,17 @@ const start = async(data)=>{
     setTimeout(()=>start(data), 5000)
   }
 }
-start()
+const sync = async()=>{
+  try{
+    let status = await update()
+    if(!notify && status){
+      notify = true
+      log.info(`updated dataList...`)
+    }
+    setTimeout(sync, 5000)
+  }catch(e){
+    setTimeout(sync, 5000)
+  }
+}
+sync()
 module.exports = start
