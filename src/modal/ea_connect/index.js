@@ -2,7 +2,6 @@
 
 module.exports = async(obj, opt = {})=>{
   if(!obj) return
-  console.log(opt)
   if(opt.request == 'email'){
     let msg2send = {
       title: 'Enter EA connect email',
