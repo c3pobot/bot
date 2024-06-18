@@ -25,10 +25,10 @@ module.exports = async(obj = {}, bot)=>{
       if(!member) member = await guild.members?.fetch(obj.dId)
     }else{
       member = bot.users?.cache?.get(obj.dId)
-      if(!member) member = bot.users?.fetch(obj.dId)
+      if(!member) member = await bot.users?.fetch(obj.dId)
     }
 
-    if(!member) throw(`error getting member`)
+    if(!member?.id) throw(`error getting member`)
 
     return await member?.send(obj.msg)
   }catch(e){
