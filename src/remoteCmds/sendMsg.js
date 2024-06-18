@@ -14,7 +14,7 @@ module.exports = async(obj = {}, bot)=>{
 
     let channel = bot?.channels?.cache?.get(obj.chId)
     if(!channel) channel = await bot?.channels?.fetch(obj.chId)
-    if(!channel) throw(`error getting channel`)
+    if(!channel?.id) throw(`error getting channel`)
 
     let hasPerm = true
     for(let i in perms){
