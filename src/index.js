@@ -5,6 +5,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const mongo = require('mongoclient');
 
 const { startBot } = require('./bot')
+//const { botSettings } = require('./helpers/botSettings')
 const cmdQue = require('./cmdQue')
 const saveSlashCmds = require('./saveSlashCmds')
 const rabbitmq = require('./helpers/rabbitmq')

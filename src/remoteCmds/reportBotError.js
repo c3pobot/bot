@@ -9,7 +9,6 @@ const blackList = (obj, type)=>{
   if(type?.toLowerCase()?.includes('message') && obj.msgId) mongo.set('blackList', {_id: obj.msgId })
 }
 module.exports = (obj = {}, err)=>{
-  log.info(err)
   if(obj.cmd){
     let type = 'arena'
     if(obj.shardId) type = 'shard'
@@ -21,11 +20,11 @@ module.exports = (obj = {}, err)=>{
     }else{
       if(err) str += ` ${err}`
     }
-    log.error(str)
+    log.debug(str)
     return
   }
   if(err?.message){
-    log.error(err.message)
+    log.debug(err.message)
     return
   }
   if(err) log.error(err)
