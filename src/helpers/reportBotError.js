@@ -46,7 +46,7 @@ module.exports = (obj = {}, err)=>{
     }else{
       if(err) str += ` ${err}`
     }
-    log.error(str)
+    log.debug(str)
     return
   }
   if(err?.message){
