@@ -22,7 +22,7 @@ module.exports = async(interaction)=>{
       return;
     }
     //await interaction.reply({ content: 'Here we go again...', components: [] })
-    if(interaction.type > 2) await interaction.deferUpdate()
+    if(interaction.type > 2 && !interaction.deferred && !interaction.replied) await interaction.deferUpdate()
     //if(interaction.type == 2) await interaction.deferReply()
     if(interaction.type == 2) await interaction.reply({ content: 'Here we go again...', components: [] })
     let cmdData = cmdToJson(interaction)

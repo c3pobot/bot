@@ -30,19 +30,19 @@ module.exports.sendCmd = async(command, obj, opt = {})=>{
   try{
     if(!obj) return
     if(!obj?.guildId){
-      await obj.deferUpdate()
+      if(!obj.deferred && !obj.replied) await obj.deferUpdate()
       replyMsg(obj, { content: 'Oh dear! I don\'t work very well in DM\'s'})
       return;
     }
     if(!obj || !command || !Cmds[command]){
-      await obj.deferUpdate()
+      if(!obj.deferred && !obj.replied) await obj.deferUpdate()
       replyMsg(obj, { content: 'Oh dear! Command not recognized...' })
       return
     }
-    if(obj.isButton()) await obj.deferUpdate()
+    if(obj.isButton() && !obj.deferred && !obj.replied) await obj.deferUpdate()
     if(opt.dId && opt.dId !== obj?.user?.id) return
-    if(obj.isCommand()) await obj.reply({ content: 'Here we go again...' })
-    if(obj.isStringSelectMenu()) await obj.deferUpdate()
+    if(obj.isCommand() && !obj.deferred && !obj.replied) await obj.reply({ content: 'Here we go again...' })
+    if(obj.isStringSelectMenu() && !obj.deferred && !obj.replied) await obj.deferUpdate()
 
     callCommand(command, obj, opt)
   }catch(e){
