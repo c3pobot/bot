@@ -20,6 +20,7 @@ module.exports.start = ()=>{
   queSet = tempSet
   publisher = rabbitmq.createPublisher(payload)
   publisherReady = true
+  log.info(`rabbitmq publisher on ${POD_NAME} started...`)
   return true
 }
 module.exports.add = async(queName, data = {})=>{

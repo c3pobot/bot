@@ -8,7 +8,7 @@ const botCmds = require('./botCmds');
 const processCmds = require('./processCmds');
 
 const BOT_TOKEN = process.env.BOT_TOKEN, POD_NAME = process.env.POD_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default', SET_NAME = process.env.SET_NAME || 'bot', PORT = process.env.PORT || 3000
-let SHARD_NUM = +POD_NAME?.replace(`${SET_NAME}-`, ''), NUM_SHARDS = 0, BOT_READY, bot
+let SHARD_NUM = +POD_NAME?.replace(`${SET_NAME}-`, ''), NUM_SHARDS = +(process.env.NUM_SHARDS || 0), BOT_READY, bot
 
 const server = app.listen(PORT, ()=>{
   log.info(`${POD_NAME} is listening on port ${server.address().port}`)
@@ -41,15 +41,6 @@ const handleCmdRequest = async(req, res)=>{
   }
 }
 
-
-const startBot = async( data )=>{
-  if(data?.numShards >= 0) NUM_SHARDS = data.numShards
-  if(!POD_NAME) throw('POD_NAME not supplied...')
-  if(SHARD_NUM >= 0 && NUM_SHARDS && BOT_TOKEN && NUM_SHARDS > SHARD_NUM){
-    createBot()
-    return true
-  }
-}
 
 const createBot = ()=>{
   log.info(`Creating bot client on shard ${SHARD_NUM} of ${NUM_SHARDS} totalShards...`)
@@ -107,26 +98,17 @@ const createBot = ()=>{
   })
   bot.login(BOT_TOKEN)
 }
-const recreateBot = async()=>{
-  if(NUM_SHARDS >= 0){
-    if(bot){
-      BOT_READY = false
-      await bot?.destroy()
-      bot = null
-    }
-    startBot()
-  }
-}
-module.exports.recreateBot = (data = {})=>{
+
+
+module.exports.startBot = ()=>{
   try{
-    if(data.replicas && data.replicas !== NUM_SHARDS && data.name === SET_NAME && data.namespace === NAME_SPACE){
-      let oldCount = NUM_SHARDS
-      NUM_SHARDS = +data.replicas
-      log.info(`Number of bot shards changed from ${oldCount} to ${NUM_SHARDS}. Recreating bot...`)
-      recreateBot()
+    if(!NUM_SHARDS) throw('NUM_SHARDS not provided can\'t start bot....')
+    if(SHARD_NUM < NUM_SHARDS){
+      createBot()
+      return
     }
+    throw(`not possible to create bot ${SHARD_NUM} of ${NUM_SHARDS}`)
   }catch(e){
     log.error(e)
   }
 }
-module.exports.startBot = startBot

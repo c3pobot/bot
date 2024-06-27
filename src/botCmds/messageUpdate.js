@@ -17,7 +17,7 @@ module.exports = async(obj = {}, bot)=>{
   let embedMsg = {
     color: 15844367,
     author: {
-      name: oldMsg.author.tag
+      name: obj.oldMsg.author.tag
     },
     description: 'Message edited in <#'+obj.oldMsg.channelId+'> [Jump to Message](https://discord.com/channels/'+obj.oldMsg.guildId+'/'+obj.oldMsg.channelId+'/'+obj.oldMsg.id+')\n\n**Before**\n'+truncateStr(obj.oldMsg.content, 2000)+'\n\n**After**\n'+truncateStr(obj.newMsg.content, 2000),
     footer:{
