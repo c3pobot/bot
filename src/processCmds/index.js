@@ -4,7 +4,7 @@ const autoComplete = require('./autoComplete')
 const remoteCmd = require('./remoteCmd')
 const { localCmds, sendCmd } = require('src/cmds')
 const modalCmds = require('src/modal')
-module.exports = (interaction)=>{
+module.exports = async(interaction)=>{
   try{
     if(!interaction) return
     if(interaction.isAutocomplete()){
@@ -20,6 +20,7 @@ module.exports = (interaction)=>{
       return
     }
     if(modalCmds[command]){
+      if(interaction.type > 2 && opt?.dId && opt?.dId !== interaction.member?.user?.id) return
       modalCmds[command](interaction, opt)
       return
     }

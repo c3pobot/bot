@@ -39,7 +39,6 @@ module.exports = async(interaction)=>{
         return
       }
     }
-
     let type = cmdMap[cmdData.cmd]?.worker
     if(!type){
       await interaction.editReply({ content: 'Oh dear! Command not recognized...', components: [] })
