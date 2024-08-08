@@ -7,10 +7,17 @@ const { cmdMap } = require('src/helpers/cmdMap')
 const getCmdOptions = async(obj)=>{
   try{
     let opt = (await mongo.find('cmdOptionsCache', { _id: obj.confirm?.id }))[0]
-    if(opt) mongo.del('cmdOptionsCache', { _id: opt._id })
+    //if(opt) mongo.del('cmdOptionsCache', { _id: opt._id })
     if(!opt?.updated) return
     if(Date.now() > (opt.updated + (60 * 60 * 1000))) return
     obj.cmd = opt.cmd, obj.subCmd = opt.subCmd, obj.subCmdGroup = opt.subCmdGroup, obj.data.options = {...opt.options, ...obj.data.options}
+  }catch(e){
+    log.error(e)
+  }
+}
+const cleanCache = async(id)=>{
+  try{
+    if(id) await mongo.del('cmdOptionsCache', { _id: id} )
   }catch(e){
     log.error(e)
   }
@@ -31,20 +38,23 @@ module.exports = async(interaction)=>{
       return
     }
     if(interaction.type > 2 && cmdData.confirm?.dId && cmdData.confirm?.dId !== interaction.member?.user?.id) return
-    if(interaction.type > 2) await interaction.editReply({ content: 'Here we go again...', components: [] })
+    
     if(cmdData.type > 2 && cmdData.confirm?.id){
       await getCmdOptions(cmdData)
       if(!cmdData.cmd){
+        if(cmdData.confirm?.user) return
         interaction.editReply({ content: 'command timed out...', components: [] })
         return
       }
+      if(cmdData.confirm?.user && cmdData.data.options?.author?.value !== interaction.member?.user?.id) return
     }
+    if(interaction.type > 2) await interaction.editReply({ content: 'Here we go again...', components: [] })
     let type = cmdMap[cmdData.cmd]?.worker
     if(!type){
       await interaction.editReply({ content: 'Oh dear! Command not recognized...', components: [] })
       return
     }
-
+    cleanCache(cmdData?.confirm?.id)
     let status = await cmdQue.add(type, cmdData)
     if(status) return
     interaction.editReply({ content: 'Oh dear! error adding command to the que', components: [] })
