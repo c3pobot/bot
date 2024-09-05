@@ -26,7 +26,7 @@ module.exports.start = ()=>{
 module.exports.add = async(queName, data = {})=>{
   if(!publisher) return
   let key = `${WORKER_QUE_NAME_SPACE}.worker.${queName}`
-  if(PRIVATE_QUES && msgOpts?.private?.has(data.guild_id) && queSet.has(`${queName}.private`)) key += '.private'
+  if(PRIVATE_QUES && msgOpts?.private?.has(data.guild_id) && queSet.has(`${WORKER_QUE_NAME_SPACE}.worker.${queName}.private`)) key += '.private'
   await publisher.send(key, data)
   return true
 }
