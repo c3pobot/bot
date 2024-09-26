@@ -11,7 +11,7 @@ let queSet = new Set()
 
 
 module.exports.start = ()=>{
-  let payload = { confirm: true, queues: [{queue: `${WORKER_QUE_NAME_SPACE}.worker.assets`, durable: true, arguments: { 'x-queue-type': 'quorum', 'x-message-ttl': 600000 }}] }
+  let payload = { confirm: true, queues: [{queue: `${WORKER_QUE_NAME_SPACE}.worker.assets`, arguments: { 'x-message-ttl': 600000 }}] }
   for(let i in queues){
     payload.queues.push({ queue: `${WORKER_QUE_NAME_SPACE}.worker.${queues[i]}`, arguments: { 'x-message-ttl': 600000 }})
     if(PRIVATE_QUES) payload.queues.push({ queue: `${WORKER_QUE_NAME_SPACE}.worker.${queues[i]}.private`, arguments: { 'x-message-ttl': 600000 }})
