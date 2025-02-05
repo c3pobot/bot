@@ -12,7 +12,6 @@ const rabbitmq = require('./helpers/rabbitmq')
 const fetch = require('./fetch')
 require('./helpers/updateDataList')
 const POD_NAME = process.env.POD_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default', SET_NAME = process.env.SET_NAME || 'bot'
-let NODE_MONITOR_URL = process.env.NODE_MONITOR_URL || 'http://node-monitor.monitor:3000'
 
 const checkRabbitmq = ()=>{
   try{

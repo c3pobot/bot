@@ -38,7 +38,6 @@ module.exports = async(interaction)=>{
       return
     }
     if(interaction.type > 2 && cmdData.confirm?.dId && cmdData.confirm?.dId !== interaction.member?.user?.id) return
-    
     if(cmdData.type > 2 && cmdData.confirm?.id){
       await getCmdOptions(cmdData)
       if(!cmdData.cmd){

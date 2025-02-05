@@ -19,6 +19,9 @@ app.get('/getNumShards', (req, res)=>{
 app.post('/cmd', (req, res)=>{
   handleCmdRequest(req, res)
 })
+app.post('/', (req, res)=>{
+  res.status(200).json({ totalShards: NUM_SHARDS, myShard: SHARD_NUM })
+})
 const handleCmdRequest = async(req, res)=>{
   try{
     if(!remoteCmds){
