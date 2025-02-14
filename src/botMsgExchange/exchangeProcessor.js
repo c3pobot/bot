@@ -8,11 +8,18 @@ const Cmds = {}
 
 Cmds[POD_NAME] = botMsg
 
-module.exports = (data)=>{
+const rpcCall = require('src/rpcCmd')
+
+module.exports = async(data, reply)=>{
   try{
     if(!data) return
+    if(data?.rpcCall){
+      let res = await rpcCall(data)
+      if(res) reply(res)
+    }
     if(Cmds[data?.routingKey]) Cmds[data.routingKey](data)
   }catch(e){
     log.error(e)
+    if(data?.rpcCall) reply()
   }
 }

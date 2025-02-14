@@ -6,14 +6,11 @@ const replyError = require('src/helpers/replyError')
 const Cmds = {}
 Cmds.avatar = require('./avatar')
 Cmds.emotes = require('./emotes')
-Cmds.gif = require('./gif')
 Cmds.iam = require('./iam')
 Cmds.iamnot = require('./iamnot')
 Cmds.roles = require('./roles')
 Cmds.roll = require('./roll')
 Cmds['self-assign'] = require('./self-assign')
-//Cmds['unit-vote'] = require('./unit-vote')
-//Cmds['unit-approve'] = require('./unit-approve')
 Cmds.whois = require('./whois')
 const callCommand = async(command, obj, opt = {})=>{
   try{

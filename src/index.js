@@ -33,7 +33,6 @@ const UpdateBotCmds = async()=>{
       status = await saveBotCmds('/app/src/localCmd', 'bot')
       syncNumBotShards()
     }
-    status = await rabbitmq.add('runner', { id: POD_NAME, cmd: 'getBotStartUp' })
     if(status){
       CheckCmdMap()
       return
@@ -44,18 +43,24 @@ const UpdateBotCmds = async()=>{
     log.error(e)
   }
 }
-const CheckCmdMap = ()=>{
+const CheckCmdMap = (count = 0)=>{
   try{
     if(Object.values(cmdMap)?.length > 0){
-      log.info(`cmdMap is ready...`)
+      log.debug(`cmdMap is ready...`)
       StartBot()
       return
     }
+    count++
+    if(count > 5){
+      rabbitmq.add('runner', { id: POD_NAME, cmd: 'getBotStartUp' })
+      count = 0
+    }
+
     log.debug(`cmdMap is not ready yet....`)
-    setTimeout(CheckCmdMap, 5000)
+    setTimeout(()=>CheckCmdMap(count), 5000)
   }catch(e){
     log.error(e)
-    setTimeout(CheckCmdMap, 5000)
+    setTimeout(()=>CheckCmdMap(count), 5000)
   }
 }
 

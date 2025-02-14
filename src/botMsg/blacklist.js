@@ -1,23 +1,20 @@
 'use strict'
 const log = require('logger')
-const mongo = require('mongoclient')
+const rpcClient = require('src/rpcClient')
 
 let blackList = new Set()
-
 const init = async()=>{
   try{
-    if(!mongo?.ready){
-      setTimeout(init, 5000)
-      return
-    }
-    let obj = await mongo.find('blackList', {}, { _id: 1})
+    let obj = await rpcClient.get('mongoCmd', { mongoCmd: 'find', collection: 'blackList', query: {}, opt: { _id: 1}})
+
     if(!obj){
       setTimeout(init, 5000)
       return
     }
-    if(obj.length === 0) return
-    blackList = new Set(obj.map(x=>x._id))
-    log.debug(`loaded ${obj.length} ids to the blackList...`)
+    if(obj.length > 0){
+      blackList = new Set(obj.map(x=>x._id))
+    }
+    log.debug(`loaded ${blackList.size} ids to the blackList...`)
   }catch(e){
     log.error(e)
     setTimeout(init, 5000)
@@ -27,7 +24,7 @@ const add = (id, data = {})=>{
   try{
     if(!id) return
     blackList.add(id)
-    mongo.set('blackList', { _id: id }, data)
+    rpcClient.get('mongoCmd', { mongoCmd: 'set', collection: 'blackList', query: { _id: id }, opt: data })
   }catch(e){
     log.error(e)
   }
@@ -39,6 +36,7 @@ module.exports.check = (id)=>{
     log.error(e)
   }
 }
+init()
 module.exports.add = add
 module.exports.report = (obj = {}, err)=>{
   try{

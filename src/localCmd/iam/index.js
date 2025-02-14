@@ -1,5 +1,5 @@
 'use strict'
-const mongo = require('mongoclient')
+const rpcClient = require('src/rpcClient')
 const showListOfRoles = require('./showListOfRoles')
 const { checkIsUser, getBotPerms, replyButton } = require('src/helpers')
 
@@ -10,7 +10,7 @@ module.exports = async(obj, opt = {})=>{
   if(botPerms?.filter(x=>x === 'ManageRoles').length == 0) return { content: 'The bot does not have permission to assign roles to members...' }
 
   let roleId = opt.roleId || obj?.options?.get('role')?.value
-  let server = (await mongo.find('discordServer', { _id: obj.guildId }, { selfassignroles: 1 }))[0]
+  let server = (await rpcClient.get('mongoCmd', { mongoCmd: 'find', collection: 'discordServer', query: { _id: obj.guildId }, opts: { selfassignroles: 1 } }))[0]
 
   if(!server?.selfassignroles || server?.selfassignroles?.length == 0) return { content: 'there are no self assign roles' }
 

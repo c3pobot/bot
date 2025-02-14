@@ -10,11 +10,11 @@ let QUE_NAME = `xbotMsg.${POD_NAME}`, consumerStatus = false
 let exchanges = [{ exchange: `bot.msg`, type: 'topic' }]
 let queueBindings = [{ exchange: `bot.msg`, queue: QUE_NAME, routingKey: POD_NAME }]
 
-const processCmd = async(msg = {})=>{
+const processCmd = async(msg = {}, reply)=>{
   try{
     if(!msg.body) return
     log.debug(`Recieved topic msg ${msg.routingKey} on ${msg.exchange}...`)
-    return await exchangeProcessor({...msg.body,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }})
+    exchangeProcessor({...msg.body,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }}, reply)
   }catch(e){
     log.error(e)
   }

@@ -2,7 +2,6 @@
 
 module.exports = async(obj, opt = {})=>{
   if(!obj) return
-  console.log(obj)
   //let opt = obj.customId
   //if(opt) opt = JSON.parse(opt)
   if(!opt || (opt?.dId && opt.dId !== obj.member?.user?.id)) return

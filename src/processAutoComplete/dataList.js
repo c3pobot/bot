@@ -1,40 +1,36 @@
 'use strict'
 const log = require('logger')
-const mongo = require('mongoclient')
+const rpcClient = require('src/rpcClient')
 
-let notify = false, dataList = {
+let dataList = {
   nameKeys: {},
   autoObj: {}
 }
-
-const updateNameKeys = async()=>{
-  let obj = (await mongo.find('autoComplete', {_id: 'nameKeys'}))[0]
-  if(obj?.data) dataList.nameKeys = obj.data
-}
-
-const updateAutoObj = async()=>{
-  let obj = await mongo.find('autoComplete', {include: true}, {_id: 1, data: {name: 1, value: 1}})
-  if(obj.length > 0){
-    let tempObj = {}
-    for(let i in obj){
-      if(obj[i]?.data) tempObj[obj[i]._id] = obj[i].data
-    }
-    dataList.autoObj = tempObj
+let POD_NAME = process.env.POD_NAME || 'bot'
+const getAutoComplete = async()=>{
+  let data = await rpcClient.get('getAutoComplete')
+  if(!data?.nameKeys) return
+  dataList.nameKeys = data.nameKeys
+  dataList.autoObj = data.autoObj
+  if(dataList.gameVersion !== data.gameVersion){
+    dataList.gameVersion = data.gameVersion
+    log.info(`updated dataList to ${dataList.gameVersion}...`)
   }
+  return true
 }
-const sync = async()=>{
+const sync = async(notify)=>{
   try{
-    if(mongo.ready){
-      await updateNameKeys()
-      await updateAutoObj()
-      if(!notify && status){
-        notify = true
-        log.info(`updated dataList...`)
-      }
+    let syncTime = 60
+    let status = await getAutoComplete()
+    if(status && !notify){
+      log.info(`${POD_NAME} dataList updated...`)
+      notify = true
     }
-    setTimeout(sync, 5000)
+    if(!status) syncTime = 5
+    setTimeout(()=>sync(notify), syncTime * 1000)
   }catch(e){
-    setTimeout(sync, 5000)
+    log.error(e)
+    setTimeout(()=>sync(notify), 5000)
   }
 }
 sync()
