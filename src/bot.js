@@ -66,7 +66,9 @@ if(NUM_SHARDS > 1){
   botOpts.shardCount = NUM_SHARDS
 }
 let bot = new Client(botOpts);
-
+bot.on('ready', async()=>{
+  log.info(`${POD_NAME} has started in ${bot.guilds.cache.size} guilds`)
+});
 bot.on('interactionCreate', interaction => {
   checkInteraction(interaction)
 });
@@ -81,9 +83,7 @@ bot.on('guildMemberAdd', member => {
 bot.on('guildMemberRemove', member => {
   //botCmds(member, 'removeMember', bot)
 })
-bot.on('ready', async()=>{
-  log.info(`${POD_NAME} has started in ${bot.guilds.cache.size} guilds`)
-});
+
 */
 
 /*

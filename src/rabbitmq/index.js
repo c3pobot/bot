@@ -42,7 +42,7 @@ module.exports.add = async(queName, payload)=>{
   try{
     if(!queName || !payload || !payload?.id || !client.ready) return
     let key = `worker.${queName}`
-    if(PRIVATE_QUES && msgOpts?.private?.has(data.guild_id) && queSet.has(`worker.${queName}.private`) && queName !== 'runner') key += '.private'
+    if(PRIVATE_QUES && msgOpts?.private?.has(payload.guild_id) && queSet.has(`worker.${queName}.private`) && queName !== 'runner') key += '.private'
     await publisher.send ({ routingKey: key }, payload)
     return true
   }catch(e){
