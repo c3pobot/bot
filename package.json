@@ -24,7 +24,6 @@
     "discord.js": "^14.17.3",
     "express": "^4.18.2",
     "logger": "github:c3pobot/logger",
-    "mongoclient": "github:c3pobot/mongoclient",
     "node-fetch": "^2.6.12",
     "rabbitmq-client": "^5.0.2",
     "shyriiwook": "^1.0.0",

@@ -1,6 +1,6 @@
 'use strict'
 const log = require('logger')
-const mongo = require('mongoclient')
+const rpcClient = require('src/rpcClient')
 
 const cmdToJson = require('./cmdToJson')
 const { cmdMap } = require('../cmdMap')
@@ -8,7 +8,7 @@ const rabbitmq = require('../rabbitmq');
 const deferOnly = new Set(['unit-approve', 'unit-vote'])
 const getCmdOptions = async(obj)=>{
   try{
-    let opt = (await mongo.find('cmdOptionsCache', { _id: obj.confirm?.id }))[0]
+    let opt = (await rpcClient.get('mongoCmd', { mongoCmd: 'find', collection: 'cmdOptionsCache', query: { _id: obj.confirm?.id } }))[0]
     //if(opt) mongo.del('cmdOptionsCache', { _id: opt._id })
     if(!opt?.updated) return
     if(Date.now() > (opt.updated + (60 * 60 * 1000))) return

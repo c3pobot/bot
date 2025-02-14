@@ -13,7 +13,9 @@ let queueBindings = [{ exchange: `${NAME_SPACE}.cmds`, queue: QUE_NAME }]
 const processCmd = async(msg = {})=>{
   try{
     if(!msg.body) return
-    return await exchangeProcessor({...msg.body,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }})
+    let data = msg.body
+    if(msg?.headers?.from_web_ui) data = JSON.parse(data)
+    return await exchangeProcessor({...data,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }})
   }catch(e){
     log.error(e)
   }

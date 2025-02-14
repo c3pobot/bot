@@ -1,6 +1,5 @@
 'use strict'
 const log = require('logger');
-const mongo = require('mongoclient');
 const rabbitmq = require('./rabbitmq');
 const botMsgExchange = require('./botMsgExchange')
 const { cmdMap } = require('./cmdMap')
