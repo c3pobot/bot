@@ -1,7 +1,6 @@
 'use strict'
 const mongo = require('mongoclient')
 const log = require('logger')
-const cmdQue = require('src/cmdQue')
 const POD_NAME = process.env.POD_NAME
 
 const blackListGuild = (obj, msg, type)=>{
@@ -10,11 +9,9 @@ const blackListGuild = (obj, msg, type)=>{
   obj.type = type
   if(msg?.toLowerCase()?.includes('channel') && obj.chId){
     mongo.set('blackList', {_id: obj.chId }, obj)
-    cmdQue.add('discord', { cmd: 'admin-report', msg: { content: `bot blackListed channel ${obj.chId} in server ${obj.sId} for type ${type}`} })
   }
   if(msg?.toLowerCase()?.includes('message') && obj.msgId){
     mongo.set('blackList', {_id: obj.msgId }, obj)
-    cmdQue.add('discord', { cmd: 'admin-report', msg: { content: `bot blackListed message ${obj.msgId} in channel ${obj.chId} in server ${obj.sId} for type ${type}`} })
   }
 
 }
@@ -24,7 +21,6 @@ const blackListUser = (obj, msg, type)=>{
   obj.type = type
   if(obj.dId){
     mongo.set('blackList', { _id: obj.dId }, { dId: obj.dId, sId: obj.sId, shardId: obj.shardId })
-    cmdQue.add('discord', { cmd: 'admin-report', msg: { content: `bot blackListed user ${obj.dId} in server ${obj.sId} for type ${type}`} })
   }
 }
 module.exports = (obj = {}, err)=>{

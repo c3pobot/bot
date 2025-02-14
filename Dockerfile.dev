@@ -20,4 +20,4 @@ COPY src ./src
 
 USER node
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD [ "nodemon", "./index.js" ]
+CMD [ "nodemon", "--trace-warnings", "./index.js" ]
