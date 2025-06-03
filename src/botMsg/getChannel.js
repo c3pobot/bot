@@ -15,20 +15,6 @@ module.exports = async(chId)=>{
     let channel = bot?.channels?.cache?.get(chId)
     if(!channel) channel = await bot?.channels?.fetch(chId)
     return channel
-    /*
-    let perms = channel.permissionsFor(channel.guild?.members?.me)?.has('ViewChannel')
-    if(!perms){
-      log.debug(`bot does not have permission to view channel ${chId}`)
-      return
-    }
-    perms = channel.permissionsFor(channel.guild?.members?.me)?.has('SendMessages')
-    if(!perms){
-      log.debug(`bot does not have permission to send in channel ${chId}`)
-      return
-    }
-
-    return channel
-    */
   }catch(e){
     log.error(e)
   }

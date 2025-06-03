@@ -7,6 +7,6 @@ const BOT_OWNER_ID = process.env.BOT_OWNER_ID, HELP_SERVER = process.env.BOT_HEL
 
 module.exports = (msg)=>{
   if(!msg || !msg?.content) return
-  //if(msg.guild.id === HELP_SERVER) checkForInvite(msg)
+  if(msg.guild.id === HELP_SERVER) checkForInvite(msg)
   if(msg?.author?.id === BOT_OWNER_ID || msgOpts?.private?.has(msg?.guild?.id) || msgOpts?.vip?.has(msg?.author?.id)) sendReaction(msg)
 }

@@ -74,7 +74,6 @@ bot.on('interactionCreate', interaction => {
 });
 bot.on('messageCreate', (msg) =>{
   if(msg?.author?.bot || !msg?.content) return
-  console.log(msg?.content)
   msgCmd(msg)
 })
 /*

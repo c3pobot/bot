@@ -13,8 +13,9 @@ let queueBindings = [{ exchange: `bot.msg`, queue: QUE_NAME, routingKey: POD_NAM
 const processCmd = async(msg = {}, reply)=>{
   try{
     if(!msg.body) return
-    log.debug(`Recieved topic msg ${msg.routingKey} on ${msg.exchange}...`)
-    exchangeProcessor({...msg.body,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }}, reply)
+    let data = msg.body
+    if(msg?.headers?.from_web_ui) data = JSON.parse(data)
+    exchangeProcessor({...data,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }}, reply)
   }catch(e){
     log.error(e)
   }

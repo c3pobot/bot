@@ -40,7 +40,7 @@ init()
 module.exports.add = add
 module.exports.report = (obj = {}, err)=>{
   try{
-    if(err?.message){
+    if(err?.message && !obj.token){
       if(err?.message?.toLowerCase()?.includes('channel') && obj.chId){
         add(obj.chId, obj)
         log.info(`bot blackListed channel ${obj.chId}...`)

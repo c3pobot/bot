@@ -50,6 +50,6 @@ module.exports = async( data = {})=>{
     let message = await channel?.messages?.fetch(data.msgId)
     return await message?.reply(data.msg)
   }catch(e){
-    blacklist.report({ chId: data.chId, msgId: data.msgId }, e)
+    blacklist.report({ chId: data.chId, msgId: data.msgId, sId: data.sId, token: data.token }, e)
   }
 }

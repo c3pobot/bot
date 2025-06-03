@@ -27,7 +27,7 @@ const CheckRabbitMQ = ()=>{
 }
 const UpdateBotCmds = async()=>{
   try{
-    let status
+    let status = true
     if(POD_NAME?.toString().endsWith("0")){
       status = await saveBotCmds('/app/src/localCmd', 'bot')
       syncNumBotShards()
@@ -49,17 +49,11 @@ const CheckCmdMap = (count = 0)=>{
       StartBot()
       return
     }
-    count++
-    if(count > 5){
-      rabbitmq.add('runner', { id: POD_NAME, cmd: 'getBotStartUp' })
-      count = 0
-    }
-
     log.debug(`cmdMap is not ready yet....`)
-    setTimeout(()=>CheckCmdMap(count), 5000)
+    setTimeout(CheckCmdMap, 5000)
   }catch(e){
     log.error(e)
-    setTimeout(()=>CheckCmdMap(count), 5000)
+    setTimeout(CheckCmdMap, 5000)
   }
 }
 

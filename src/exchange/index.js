@@ -15,7 +15,7 @@ const processCmd = async(msg = {})=>{
     if(!msg.body) return
     let data = msg.body
     if(msg?.headers?.from_web_ui) data = JSON.parse(data)
-    return await exchangeProcessor({...data,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }})
+    exchangeProcessor({...data,...{ routingKey: msg.routingKey, exchange: msg.exchange, timestamp: msg.timestamp }})
   }catch(e){
     log.error(e)
   }

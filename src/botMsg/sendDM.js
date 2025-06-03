@@ -14,8 +14,7 @@ module.exports = async(data = {})=>{
 
     if(data.file || data.files || data.msg.file || data.msg.files) data.msg.files = convertFiles(data)
     return await member?.send(data.msg)
-
   }catch(e){
-    blacklist.report({ dId: data.dId }, e)
+    blacklist.report({ dId: data.dId, sId: data.sId, token: data.token }, e)
   }
 }

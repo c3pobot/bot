@@ -51,9 +51,7 @@ const getPreviousCmd = (obj, data = {})=>{
     data.subCmd = oldCmd[1]
   }
 }
-const getMsg = async(channel, msg)=>{
-  return await channel?.messages?.fetch(msg?.reference?.messageId)
-}
+
 const getInitialResponse = async(obj)=>{
   let msg = await obj.fetchReply()
   if(!msg?.id) return

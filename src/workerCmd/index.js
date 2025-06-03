@@ -11,7 +11,7 @@ const getCmdOptions = async(obj)=>{
     let opt = (await rpcClient.get('mongoCmd', { mongoCmd: 'find', collection: 'cmdOptionsCache', query: { _id: obj.confirm?.id } }))[0]
     //if(opt) mongo.del('cmdOptionsCache', { _id: opt._id })
     if(!opt?.updated) return
-    if(Date.now() > (opt.updated + (60 * 60 * 1000))) return
+    if(Date.now() > (opt?.updated + (60 * 60 * 1000))) return
     obj.cmd = opt.cmd, obj.subCmd = opt.subCmd, obj.subCmdGroup = opt.subCmdGroup, obj.data.options = {...opt.options, ...obj.data.options}
   }catch(e){
     log.error(e)
@@ -19,7 +19,8 @@ const getCmdOptions = async(obj)=>{
 }
 const cleanCache = async(id)=>{
   try{
-    if(id) await mongo.del('cmdOptionsCache', { _id: id} )
+    if(id) await (rpcClient.get('mongoCmd', { mongoCmd: 'del', collection: 'cmdOptionsCache', query: { _id: id}}))
+    //if(id) await mongo.del('cmdOptionsCache', { _id: id} )
   }catch(e){
     log.error(e)
   }
@@ -49,7 +50,7 @@ module.exports = async(interaction)=>{
       }
       if(cmdData.confirm?.user && cmdData.data.options?.author?.value !== interaction.member?.user?.id) return
     }
-    if(interaction.type > 2 && !deferOnly.has(cmdData.cmd)) await interaction.editReply({ content: 'Here we go again...', components: [] })
+    if(interaction.type > 2 && !deferOnly.has(cmdData.cmd) && !cmdData?.confirm?.deferOnly) await interaction.editReply({ content: 'Here we go again...', components: [] })
     let type = cmdMap[cmdData.cmd]?.worker
     if(!type){
       await interaction.editReply({ content: 'Oh dear! Command not recognized...', components: [] })

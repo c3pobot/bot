@@ -28,10 +28,7 @@ module.exports = async(data = {})=>{
       return await message.edit(`I do not have AttachFiles permission for this channel...`)
     }
     return await message?.edit(data.msg)
-
-
   }catch(e){
-    //log.error(e)
-    blacklist.report({ chId: data.chId, msgId: data.msgId }, e)
+    blacklist.report({ chId: data.chId, msgId: data.msgId, sId: data.sId, token: data.token }, e)
   }
 }
