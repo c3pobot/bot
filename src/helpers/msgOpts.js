@@ -6,7 +6,6 @@ let msgOpts = { private: new Set([]), vip: new Set([]) }, POD_NAME = process.env
 
 const getMsgOpts = async()=>{
   let data = await rpcClient.get('getMsgOpts')
-  console.log(data)
   if(!data?.vip || !data?.private) return
   msgOpts.vip = new Set(data.vip || [])
   msgOpts.private = new Set(data.private || [])
