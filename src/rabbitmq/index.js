@@ -16,7 +16,7 @@ const start = ()=>{
   try{
     for(let i in queNames){
       queues.push({ queue: `worker.${queNames[i]}`, arguments: { 'x-message-ttl': 600000 }})
-      if(PRIVATE_QUES) queues.push({ queue: `worker.${queNames[i]}.private`, arguments: { 'x-message-ttl': 600000 }})
+      queues.push({ queue: `worker.${queNames[i]}.private`, arguments: { 'x-message-ttl': 600000 }})
     }
     queSet = new Set(queues.map(x=>x.queue))
     publisher = client.createPublisher({ exchanges: exchanges, queues: queues })
@@ -42,7 +42,7 @@ module.exports.add = async(queName, payload)=>{
   try{
     if(!queName || !payload || !payload?.id || !client.ready) return
     let key = `worker.${queName}`
-    if(PRIVATE_QUES && msgOpts?.private?.has(payload.guild_id) && queSet.has(`worker.${queName}.private`) && queName !== 'runner') key += '.private'
+    if(msgOpts?.private?.has(payload.guild_id) && queSet.has(`worker.${queName}.private`) && queName !== 'runner') key += '.private'
     await publisher.send ({ routingKey: key }, payload)
     return true
   }catch(e){
