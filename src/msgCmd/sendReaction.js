@@ -11,6 +11,8 @@ module.exports = (msg)=>{
       podName: POD_NAME,
       cmd: 'reactions',
       content: msg.content.toString().trim(),
+      userMentions: msg?.mentions?.members?.map(x=>x.id),
+      roleMentions: msg?.mentions?.roles?.map(x=>x.id),
       dId: msg?.author?.id,
       chId: msg?.channel?.id,
       sId: msg?.guild?.id,
