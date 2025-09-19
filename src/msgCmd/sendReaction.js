@@ -12,9 +12,11 @@ module.exports = (msg)=>{
       cmd: 'reactions',
       content: msg.content.toString().trim(),
       reference: msg.reference,
-      userMentions: msg?.mentions?.members?.map(x=>x.id),
-      roleMentions: msg?.mentions?.roles?.map(x=>x.id),
+      mentionIds: (msg?.mentions?.members?.map(x=>x.id) || [])?.concat(msg?.mentions?.roles?.map(x=>x.id) || []),
+      userMentions: msg?.mentions?.members?.map(x=>{ return { id: x.id, name: x.nickname || x.user?.username }}),
+      roleMentions: msg?.mentions?.roles?.map(x=>{ return { id: x.id, name: x.name}}),
       dId: msg?.author?.id,
+      username: msg?.author?.globalName || msg.author?.username,
       chId: msg?.channel?.id,
       sId: msg?.guild?.id,
       botPerms: msg.channel?.permissionsFor(msg?.channel?.guild?.members?.me)?.toArray()
