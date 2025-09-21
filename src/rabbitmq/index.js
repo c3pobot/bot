@@ -5,12 +5,12 @@ const client = require('./client')
 const { msgOpts } = require('../helpers/msgOpts')
 
 let POD_NAME = process.env.POD_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default', PRIVATE_QUES = process.env.PRIVATE_QUES || false
-let DEFAULT_EXCHANGE = `${NAME_SPACE}.cmds`, NUM_SHARDS = +(process.env.NUM_SHARDS || 1)
+let DEFAULT_EXCHANGE = `${NAME_SPACE}.cmds`, NUM_SHARDS = +(process.env.NUM_SHARDS || 1), AI_RUNNER_EXCHANGE = `${NAME_SPACE}.msg.ai-runner`
 let queNames = [ 'swgoh', 'discord', 'oauth', 'tw-guild'], queSet, publisher, publisherReady, cmdCount = 0
 if(process.env.WORKER_QUES) queNames = JSON.parse(process.env.WORKER_QUES)
 
 let queues = [{ queue: `worker.runner`, arguments: { 'x-message-ttl': 600000 }}]
-let exchanges = [{ exchange: DEFAULT_EXCHANGE, type: 'topic', maxAttempts: 5 }]
+let exchanges = [{ exchange: DEFAULT_EXCHANGE, type: 'topic', maxAttempts: 5 }, { exchange: AI_RUNNER_EXCHANGE, type: 'topic', maxAttempts: 5 }]
 
 const start = ()=>{
   try{

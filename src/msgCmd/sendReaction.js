@@ -1,8 +1,9 @@
 'use strict'
 const log = require('logger')
 const rabbitmq = require('src/rabbitmq')
-
-let POD_NAME = process.env.POD_NAME || 'bot'
+const { botSettings } = require('src/helpers/botSettings')
+let POD_NAME = process.env.POD_NAME || 'bot', NAME_SPACE = process.env.NAME_SPACE || 'default'
+let AI_RUNNER_EXCHANGE = `${NAME_SPACE}.msg.ai-runner`
 
 module.exports = (msg)=>{
   try{
@@ -20,6 +21,14 @@ module.exports = (msg)=>{
       chId: msg?.channel?.id,
       sId: msg?.guild?.id,
       botPerms: msg.channel?.permissionsFor(msg?.channel?.guild?.members?.me)?.toArray()
+    }
+    if(data.mentionIds?.length > 0){
+      for(let i in data.mentionIds){
+        if(botSettings?.botIDs?.has(data.mentionIds[i])){
+          rabbitmq.notify({ cmd: 'ai_message', msg: data }, null, AI_RUNNER_EXCHANGE)
+          return
+        }
+      }
     }
     rabbitmq.add('runner', data)
   }catch(e){

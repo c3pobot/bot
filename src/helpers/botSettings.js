@@ -7,7 +7,11 @@ let botSettings = { }, POD_NAME = process.env.POD_NAME || 'bot'
 const getBotSettings = async()=>{
   let data = await rpcClient.get('getBotSettings')
   if(!data) return
-  for(let i in data) botSettings[i] = data[i]
+  for(let i in data){
+    if(i == `botIDs`) continue
+    botSettings[i] = data[i]
+  }
+  botSettings.botIDs = new Set(data.botIDs || [])
   return true
 }
 const sync = async( notify )=>{
