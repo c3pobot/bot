@@ -85,9 +85,10 @@ const StartExchange = ()=>{
 }
 const syncNumBotShards = async()=>{
   try{
-    let syncTime = 30
+    let syncTime = 30, guildCount = bot?.guilds?.cache?.size
     let status = await rabbitmq.notify({ cmd: 'numBotShardsNotify',  numBotShards: NUM_SHARDS })
     if(!status) syncTime = 5
+    if(guildCount > 0) rabbitmq.notify({cmd: 'guildCountUpdate', shardNum: SHARD_NUM, guildCount: guildCount })
     setTimeout(syncNumBotShards, syncTime * 1000)
   }catch(e){
     log.error(e)
