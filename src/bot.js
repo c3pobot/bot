@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger')
 const { Client, GatewayIntentBits } = require('discord.js');
-
+const rabbitmq = require('./rabbitmq');
 const processAutoComplete = require('./processAutoComplete')
 
 const msgCmd = require('./msgCmd');
@@ -67,7 +67,9 @@ if(NUM_SHARDS > 1){
 }
 let bot = new Client(botOpts);
 bot.on('ready', async()=>{
-  log.info(`${POD_NAME} has started in ${bot.guilds.cache.size} guilds`)
+  let guildCount = bot?.guilds?.cache?.size
+  log.info(`${POD_NAME} has started in ${guildCount} guilds`)
+  if(guildCount > 0) rabbitmq.notify({cmd: 'guildCountUpdate', shardNum: SHARD_NUM, guildCount: guildCount })
 });
 bot.on('interactionCreate', interaction => {
   checkInteraction(interaction)
@@ -76,6 +78,10 @@ bot.on('messageCreate', (msg) =>{
   if(msg?.author?.bot || !msg?.content) return
   msgCmd(msg)
 })
+bot.on('guildCreate', async()=>{
+  let guildCount = bot?.guilds?.cache?.size
+  if(guildCount > 0) rabbitmq.notify({cmd: 'guildCountUpdate', shardNum: SHARD_NUM, guildCount: guildCount })
+});
 /*
 bot.on('guildMemberAdd', member => {
    //botCmds(member, 'addMember', bot)
