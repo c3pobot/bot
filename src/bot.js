@@ -71,7 +71,9 @@ bot.on('ready', async()=>{
   log.info(`${POD_NAME} has started in ${guildCount} guilds`)
   if(guildCount > 0) rabbitmq.notify({cmd: 'guildCountUpdate', shardNum: SHARD_NUM, guildCount: guildCount })
 });
+let interactionCount = 0
 bot.on('interactionCreate', interaction => {
+  interactionCount++
   checkInteraction(interaction)
 });
 bot.on('messageCreate', (msg) =>{
@@ -110,5 +112,15 @@ bot.on('error', (err)=>{
   log.error(err)
 })
 bot.podName = POD_NAME
-
+const resetInteractionCount = ()=>{
+  try{
+    log.info(`${interactionCount} interactions in last 60 seconds...`)
+    interactionCount = 0
+    setTimeout(resetInteractionCount, 60000)
+  }catch(e){
+    setTimeout(resetInteractionCount, 5000)
+    log.error(e)
+  }
+}
+resetInteractionCount()
 module.exports = bot
