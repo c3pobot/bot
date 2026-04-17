@@ -26,11 +26,7 @@ app.get('/getNumShards', (req, res)=>{
   res.status(200).json({ totalShards: NUM_SHARDS, myShard: SHARD_NUM })
 })
 app.get('/healthz', (req, res)=>{
-  if(botStatus){
-    res.sendStatus(200)
-    return
-  }
-  res.status(400)
+  res.sendStatus(200)
 })
 app.get('/', (req, res)=>{
   res.status(200).json({ totalShards: NUM_SHARDS, myShard: SHARD_NUM })
